@@ -1,0 +1,23 @@
+lemi.so
+=========
+
+Elko Lemiso
+Lead Developer, InQommon ( Social Media Company )
+Full-Stack / NodeJS / DevOps ... so on
+
+Contact
+-------
+
+* elkovandongen at gmail dot com
+* @lemi.so on Twitter
+* plutoniumApples on Discord
+
+Projects
+--------
+
+* www.bayck.com
+* www.weltevree.com
+* www.gaba.studio
+* www.inqommon.com
+and of course...
+* www.lemi.so
