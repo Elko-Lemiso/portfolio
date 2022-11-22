@@ -37,7 +37,7 @@ module.exports = {
     contentBase: __dirname,
     publicPath: '/dist',
     compress: true,
-    port: 4003,
+    port: 4200,
   },
   optimization: {
     minimize: true

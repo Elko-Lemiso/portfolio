@@ -2,8 +2,9 @@
 =========
 
 Elko Lemiso
-Lead Developer, InQommon ( Social Media Company )
-Full-Stack / NodeJS / DevOps ... so on
+Front-End Developer, BreachLock ( Social Media Company )
+Full-Stack / NodeJS / DevOps
+
 
 Contact
 -------
@@ -11,6 +12,7 @@ Contact
 * elkovandongen at gmail dot com
 * @lemi.so on Twitter
 * plutoniumApples on Discord
+* Elko-Lemiso on github
 
 Projects
 --------
@@ -18,5 +20,4 @@ Projects
 * www.bayck.com
 * www.weltevree.eu
 * www.inqommon.com
-and of course...
 * 3lko.com
