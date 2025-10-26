@@ -69,11 +69,11 @@ pre::-webkit-scrollbar-thumb:hover {
 
 /* Dock - basic structure, will be styled during animation */
 #header {
-  position: absolute;
+  position: fixed;
   bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1000;
+  z-index: 99999;
   padding: 6px 12px;
 }
 

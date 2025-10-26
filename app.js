@@ -10,18 +10,6 @@ import replaceURLs from './lib/replaceURLs';
 import {default as writeChar, writeSimpleChar, handleChar} from './lib/writeChar';
 import getPrefix from './lib/getPrefix';
 
-// Throttle utility for performance
-function throttle(func, limit) {
-  let inThrottle;
-  return function(...args) {
-    if (!inThrottle) {
-      func.apply(this, args);
-      inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
-    }
-  };
-}
-
 // Vars that will help us get er done
 const isDev = window.location.hostname === 'localhost';
 const speed = isDev ? 0.2 : 16;
@@ -199,10 +187,16 @@ function createEventHandlers() {
   pauseEl.addEventListener('click', function(e) {
     e.preventDefault();
     if (paused) {
-      pauseEl.textContent = "Pause ||";
+      const icon = pauseEl.querySelector('.dock-icon');
+      const label = pauseEl.querySelector('.dock-label');
+      if (icon) icon.textContent = "⏸";
+      if (label) label.textContent = "Pause";
       paused = false;
     } else {
-      pauseEl.textContent = "Resume >>";
+      const icon = pauseEl.querySelector('.dock-icon');
+      const label = pauseEl.querySelector('.dock-label');
+      if (icon) icon.textContent = "▶";
+      if (label) label.textContent = "Resume";
       paused = true;
     }
   });
@@ -227,12 +221,12 @@ function createEventHandlers() {
     });
   }
 
-  // Open funny gif window
-  const openGif = document.getElementById('open-gif');
-  if (openGif) {
-    openGif.addEventListener('click', function(e) {
+  // Open Jeffrey video window
+  const openJeffrey = document.getElementById('open-jeffrey');
+  if (openJeffrey) {
+    openJeffrey.addEventListener('click', function(e) {
       e.preventDefault();
-      createGifWindow();
+      createJeffreyWindow();
     });
   }
 
@@ -264,14 +258,40 @@ function addWindowControls() {
       windowEl.style.top = computedStyle.top;
     }
 
+    // Create sticky header container
+    const headerContainer = document.createElement('div');
+    headerContainer.className = 'window-header-sticky';
+
+    // Create title bar background
+    const titleBarBg = document.createElement('div');
+    titleBarBg.className = 'window-titlebar-bg';
+    headerContainer.appendChild(titleBarBg);
+
     // Create draggable title bar overlay
     const titleBar = document.createElement('div');
     titleBar.className = 'window-titlebar-draggable';
-    windowEl.appendChild(titleBar);
+    headerContainer.appendChild(titleBar);
+
+    // Create window title
+    const windowTitle = document.createElement('div');
+    windowTitle.className = 'window-title';
+    // Set title based on window ID
+    if (windowEl.id === 'style-text') {
+      windowTitle.textContent = 'Terminal — 3lko.com';
+    } else if (windowEl.id === 'work-text') {
+      windowTitle.textContent = 'Portfolio — Elko Lemiso';
+    } else if (windowEl.id === 'jeffrey-window') {
+      windowTitle.textContent = 'Jeffrey — 3lko.com';
+    }
+    headerContainer.appendChild(windowTitle);
 
     // Create controls container
     const controls = document.createElement('div');
     controls.className = 'window-controls';
+    headerContainer.appendChild(controls);
+
+    // Add header to window
+    windowEl.insertBefore(headerContainer, windowEl.firstChild);
 
     // Close button
     const closeBtn = document.createElement('div');
@@ -280,6 +300,10 @@ function addWindowControls() {
     closeBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       windowEl.style.display = 'none';
+
+      // Clean up event listeners to prevent memory leaks
+      if (windowEl._dragCleanup) windowEl._dragCleanup();
+      if (windowEl._resizeCleanup) windowEl._resizeCleanup();
     });
 
     // Minimize button
@@ -313,7 +337,6 @@ function addWindowControls() {
     controls.appendChild(closeBtn);
     controls.appendChild(minimizeBtn);
     controls.appendChild(maximizeBtn);
-    windowEl.appendChild(controls);
 
     // Add dragging functionality
     makeWindowDraggable(windowEl, titleBar);
@@ -329,15 +352,13 @@ function addWindowControls() {
 }
 
 //
-// Make a window draggable by its title bar (GPU-accelerated)
+// Make a window draggable by its title bar (GPU-accelerated with cleanup)
 //
 function makeWindowDraggable(windowEl, titleBar) {
   let isDragging = false;
   let startX, startY;
   let startLeft, startTop;
   let rafId = null;
-
-  titleBar.addEventListener('mousedown', dragStart);
 
   function dragStart(e) {
     // Don't drag if clicking on window buttons
@@ -357,9 +378,6 @@ function makeWindowDraggable(windowEl, titleBar) {
     e.preventDefault();
   }
 
-  document.addEventListener('mousemove', drag);
-  document.addEventListener('mouseup', dragEnd);
-
   function drag(e) {
     if (!isDragging) return;
 
@@ -374,8 +392,24 @@ function makeWindowDraggable(windowEl, titleBar) {
       const deltaX = e.clientX - startX;
       const deltaY = e.clientY - startY;
 
-      windowEl.style.left = (startLeft + deltaX) + 'px';
-      windowEl.style.top = (startTop + deltaY) + 'px';
+      let newLeft = startLeft + deltaX;
+      let newTop = startTop + deltaY;
+
+      // Get window dimensions
+      const windowWidth = windowEl.offsetWidth;
+      const windowHeight = windowEl.offsetHeight;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const dockHeight = 110; // Reserve space for dock at bottom
+
+      // Constrain to viewport boundaries
+      // Keep at least 40px (title bar height) visible
+      const minVisible = 40;
+      newLeft = Math.max(minVisible - windowWidth, Math.min(newLeft, viewportWidth - minVisible));
+      newTop = Math.max(0, Math.min(newTop, viewportHeight - dockHeight - minVisible));
+
+      windowEl.style.left = newLeft + 'px';
+      windowEl.style.top = newTop + 'px';
     });
   }
 
@@ -393,35 +427,77 @@ function makeWindowDraggable(windowEl, titleBar) {
       }
     }
   }
+
+  // Store cleanup function on the window element
+  windowEl._dragCleanup = () => {
+    document.removeEventListener('mousemove', drag);
+    document.removeEventListener('mouseup', dragEnd);
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  };
+
+  titleBar.addEventListener('mousedown', dragStart);
+  document.addEventListener('mousemove', drag);
+  document.addEventListener('mouseup', dragEnd);
 }
 
 //
-// Make a window resizable (GPU-accelerated)
+// Make a window resizable (GPU-accelerated with cleanup)
 //
 function makeWindowResizable(windowEl) {
-  const resizeHandle = document.createElement('div');
-  resizeHandle.className = 'resize-handle';
-  windowEl.appendChild(resizeHandle);
+  // Create resize handles for all 8 positions
+  const positions = [
+    { class: 'resize-handle-nw', cursor: 'nw-resize' },
+    { class: 'resize-handle-n', cursor: 'n-resize' },
+    { class: 'resize-handle-ne', cursor: 'ne-resize' },
+    { class: 'resize-handle-e', cursor: 'e-resize' },
+    { class: 'resize-handle-se', cursor: 'se-resize' },
+    { class: 'resize-handle-s', cursor: 's-resize' },
+    { class: 'resize-handle-sw', cursor: 'sw-resize' },
+    { class: 'resize-handle-w', cursor: 'w-resize' }
+  ];
+
+  positions.forEach(pos => {
+    const handle = document.createElement('div');
+    handle.className = `resize-handle ${pos.class}`;
+    handle.style.cursor = pos.cursor;
+    handle.dataset.direction = pos.class.replace('resize-handle-', '');
+    windowEl.appendChild(handle);
+  });
 
   let isResizing = false;
-  let startX, startY, startWidth, startHeight;
+  let startX, startY, startWidth, startHeight, startLeft, startTop;
+  let currentDirection = '';
   let rafId = null;
 
-  resizeHandle.addEventListener('mousedown', (e) => {
+  function onResizeStart(e) {
+    // Don't resize if minimized or maximized
+    if (windowEl.classList.contains('minimized') || windowEl.classList.contains('maximized')) {
+      return;
+    }
+
+    // Check if this is a resize handle
+    if (!e.target.classList.contains('resize-handle')) return;
+
     isResizing = true;
+    currentDirection = e.target.dataset.direction;
     startX = e.clientX;
     startY = e.clientY;
     startWidth = parseInt(window.getComputedStyle(windowEl).width, 10);
     startHeight = parseInt(window.getComputedStyle(windowEl).height, 10);
+    startLeft = parseInt(windowEl.style.left) || 0;
+    startTop = parseInt(windowEl.style.top) || 0;
 
     // Enable GPU acceleration
-    windowEl.style.willChange = 'width, height';
+    windowEl.style.willChange = 'width, height, left, top';
 
     e.stopPropagation();
     e.preventDefault();
-  });
+  }
 
-  document.addEventListener('mousemove', (e) => {
+  function onResizeMove(e) {
     if (!isResizing) return;
 
     e.preventDefault();
@@ -434,21 +510,70 @@ function makeWindowResizable(windowEl) {
       const deltaX = e.clientX - startX;
       const deltaY = e.clientY - startY;
 
-      const newWidth = startWidth + deltaX;
-      const newHeight = startHeight + deltaY;
+      let newWidth = startWidth;
+      let newHeight = startHeight;
+      let newLeft = startLeft;
+      let newTop = startTop;
 
-      // Set minimum size
-      if (newWidth > 200) {
-        windowEl.style.width = newWidth + 'px';
+      // Get viewport dimensions
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const dockHeight = 110;
+
+      // Set minimum sizes
+      const minWidth = 200;
+      const minHeight = 150;
+
+      // Apply resize based on direction
+      if (currentDirection.includes('e')) {
+        newWidth = startWidth + deltaX;
       }
-      if (newHeight > 150) {
-        windowEl.style.height = newHeight + 'px';
-        windowEl.style.maxHeight = newHeight + 'px';
+      if (currentDirection.includes('w')) {
+        newWidth = startWidth - deltaX;
+        newLeft = startLeft + deltaX;
       }
+      if (currentDirection.includes('s')) {
+        newHeight = startHeight + deltaY;
+      }
+      if (currentDirection.includes('n')) {
+        newHeight = startHeight - deltaY;
+        newTop = startTop + deltaY;
+      }
+
+      // Constrain to minimum sizes
+      if (newWidth < minWidth) {
+        newWidth = minWidth;
+        if (currentDirection.includes('w')) {
+          newLeft = startLeft + (startWidth - minWidth);
+        }
+      }
+      if (newHeight < minHeight) {
+        newHeight = minHeight;
+        if (currentDirection.includes('n')) {
+          newTop = startTop + (startHeight - minHeight);
+        }
+      }
+
+      // Constrain to viewport
+      const maxWidth = viewportWidth - newLeft - 10;
+      const maxHeight = viewportHeight - newTop - dockHeight - 10;
+
+      newWidth = Math.min(newWidth, maxWidth);
+      newHeight = Math.min(newHeight, maxHeight);
+
+      // Constrain position
+      newLeft = Math.max(minWidth - newWidth + 40, Math.min(newLeft, viewportWidth - 40));
+      newTop = Math.max(0, Math.min(newTop, viewportHeight - dockHeight - 40));
+
+      windowEl.style.width = newWidth + 'px';
+      windowEl.style.height = newHeight + 'px';
+      windowEl.style.maxHeight = newHeight + 'px';
+      windowEl.style.left = newLeft + 'px';
+      windowEl.style.top = newTop + 'px';
     });
-  });
+  }
 
-  document.addEventListener('mouseup', () => {
+  function onResizeEnd() {
     if (isResizing) {
       isResizing = false;
       // Remove GPU acceleration hint
@@ -460,15 +585,44 @@ function makeWindowResizable(windowEl) {
         rafId = null;
       }
     }
+  }
+
+  // Store cleanup function on the window element
+  windowEl._resizeCleanup = () => {
+    document.removeEventListener('mousemove', onResizeMove);
+    document.removeEventListener('mouseup', onResizeEnd);
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  };
+
+  // Add event listeners to all resize handles
+  windowEl.querySelectorAll('.resize-handle').forEach(handle => {
+    handle.addEventListener('mousedown', onResizeStart);
   });
+
+  document.addEventListener('mousemove', onResizeMove);
+  document.addEventListener('mouseup', onResizeEnd);
 }
 
 //
-// Bring window to front when clicked
+// Bring window to front when clicked (with overflow protection)
 //
 let highestZIndex = 1000;
+const MAX_Z_INDEX = 9999;
 function bringWindowToFront(windowEl) {
   highestZIndex++;
+
+  // Reset z-indexes if we're approaching the limit
+  if (highestZIndex > MAX_Z_INDEX) {
+    const allWindows = document.querySelectorAll('pre:not(:empty)');
+    allWindows.forEach((win, index) => {
+      win.style.zIndex = 1000 + index;
+    });
+    highestZIndex = 1000 + allWindows.length;
+  }
+
   windowEl.style.zIndex = highestZIndex;
 }
 
@@ -491,41 +645,48 @@ function createWorkBox() {
 }
 
 //
-// Create a funny gif window
+// Create Jeffrey video window
 //
-let gifWindow = null;
-function createGifWindow() {
+let jeffreyWindow = null;
+function createJeffreyWindow() {
   // If window already exists, just show it
-  if (gifWindow) {
-    gifWindow.style.display = 'block';
-    bringWindowToFront(gifWindow);
+  if (jeffreyWindow) {
+    jeffreyWindow.style.display = 'block';
+    bringWindowToFront(jeffreyWindow);
     return;
   }
 
-  // Create new gif window
-  gifWindow = document.createElement('pre');
-  gifWindow.id = 'gif-window';
-  gifWindow.innerHTML = `
-    <div style="padding: 20px; text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-      <h2 style="color: #22d3ee; margin-bottom: 20px; font-family: 'Inter', sans-serif;">Need a break? 😄</h2>
-      <iframe src="https://giphy.com/embed/13HgwGsXF0aiGY" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen style="border-radius: 8px;"></iframe>
-      <p style="color: #a78bfa; margin-top: 16px; font-size: 14px;">Keep grinding! 💪</p>
+  // Create new Jeffrey window
+  jeffreyWindow = document.createElement('pre');
+  jeffreyWindow.id = 'jeffrey-window';
+  jeffreyWindow.innerHTML = `
+    <div style="padding: 20px; text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.3);">
+      <video
+        autoplay
+        loop
+        muted
+        playsinline
+        style="width: 100%; height: auto; border-radius: 8px; max-width: 600px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);"
+      >
+        <source src="/ico/jeffrey.webm" type="video/webm">
+        Your browser doesn't support video playback.
+      </video>
     </div>
   `;
 
-  // Style the gif window
-  gifWindow.style.left = '25%';
-  gifWindow.style.top = '20%';
-  gifWindow.style.width = '550px';
-  gifWindow.style.height = '450px';
-  gifWindow.style.maxHeight = '450px';
+  // Style the Jeffrey window - optimized for 16:9 video
+  jeffreyWindow.style.left = '20%';
+  jeffreyWindow.style.top = '15%';
+  jeffreyWindow.style.width = '680px';
+  jeffreyWindow.style.height = '440px';
+  jeffreyWindow.style.maxHeight = '440px';
 
   // Add to DOM
-  document.getElementById('content').appendChild(gifWindow);
+  document.getElementById('content').appendChild(jeffreyWindow);
 
   // Add window controls
   setTimeout(() => {
     addWindowControls();
-    bringWindowToFront(gifWindow);
+    bringWindowToFront(jeffreyWindow);
   }, 100);
 }

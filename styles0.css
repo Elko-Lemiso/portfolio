@@ -89,21 +89,37 @@ pre:not(:empty) {
   position: relative;
 }
 
-/* macOS Window Title Bar */
-pre:not(:empty)::before {
-  content: '';
-  position: absolute;
+/* Sticky Header Container */
+.window-header-sticky {
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
+  width: 100%;
   height: 40px;
+  z-index: 100;
   background: rgba(46, 46, 50, 0.98);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 0.5px solid rgba(0, 0, 0, 0.5);
   border-radius: 10px 10px 0 0;
-  z-index: 10;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  margin: 0;
+  margin-left: -2vw;
+  margin-right: -2vw;
+  margin-top: 0;
+  padding-left: 2vw;
+  padding-right: 2vw;
+}
+
+/* Title Bar Background */
+.window-titlebar-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 40px;
   pointer-events: none;
 }
 
@@ -113,8 +129,9 @@ pre:not(:empty)::before {
   top: 0;
   left: 0;
   right: 0;
+  width: 100%;
   height: 40px;
-  z-index: 11;
+  z-index: 2;
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
@@ -124,6 +141,22 @@ pre:not(:empty)::before {
   cursor: grabbing;
 }
 
+/* Window Title */
+.window-title {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  letter-spacing: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 1;
+}
+
 /* Traffic Light Buttons Container */
 .window-controls {
   position: absolute;
@@ -131,7 +164,7 @@ pre:not(:empty)::before {
   left: 12px;
   display: flex;
   gap: 8px;
-  z-index: 12;
+  z-index: 3;
   pointer-events: auto;
 }
 
@@ -195,85 +228,89 @@ pre:not(:empty)::before {
   font-weight: bold;
 }
 
-/* Resize Handle */
+/* Resize Handles - Fixed to window borders, always accessible */
 .resize-handle {
-  position: absolute;
+  position: fixed;
+  z-index: 13;
+  transition: background-color 0.2s ease;
+}
+
+.resize-handle:hover {
+  background-color: rgba(168, 85, 247, 0.3);
+}
+
+/* Corner handles - 10x10px clickable areas */
+.resize-handle-nw {
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-top-left-radius: 10px;
+}
+
+.resize-handle-ne {
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-top-right-radius: 10px;
+}
+
+.resize-handle-se {
   bottom: 0;
   right: 0;
-  width: 20px;
-  height: 20px;
-  cursor: nwse-resize;
-  z-index: 13;
-  transition: opacity 0.2s ease;
+  width: 10px;
+  height: 10px;
+  border-bottom-right-radius: 10px;
 }
 
-.resize-handle::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 0 12px 12px;
-  border-color: transparent transparent rgba(255, 255, 255, 0.4) transparent;
-  transition: border-color 0.2s ease;
+.resize-handle-sw {
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-bottom-left-radius: 10px;
 }
 
-.resize-handle:hover::after {
-  border-color: transparent transparent rgba(255, 255, 255, 0.7) transparent;
+/* Edge handles - 5px wide, full length */
+.resize-handle-n {
+  top: 0;
+  left: 10px;
+  right: 10px;
+  height: 5px;
 }
 
-pre:not(:empty):hover .resize-handle::after {
-  border-color: transparent transparent rgba(255, 255, 255, 0.5) transparent;
+.resize-handle-s {
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 5px;
 }
 
-/* Content padding */
+.resize-handle-e {
+  top: 10px;
+  right: 0;
+  bottom: 10px;
+  width: 5px;
+}
+
+.resize-handle-w {
+  top: 10px;
+  left: 0;
+  bottom: 10px;
+  width: 5px;
+}
+
+/* Hide resize handle when minimized or maximized */
+pre.minimized .resize-handle,
+pre.maximized .resize-handle {
+  display: none;
+}
+
+/* Content padding - account for sticky header */
 pre:not(:empty) {
-  padding: 52px 2vw 2vh 2vw;
-}
-
-/* Window title - different for each panel */
-#style-text::before {
-  content: 'Terminal — 3lko.com';
-  position: absolute;
-  top: 11px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  z-index: 11;
-  letter-spacing: 0;
-}
-
-#work-text::before {
-  content: 'Portfolio — Elko Lemiso';
-  position: absolute;
-  top: 11px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  z-index: 11;
-  letter-spacing: 0;
-}
-
-#gif-window::before {
-  content: 'Vibe Check — 3lko.com';
-  position: absolute;
-  top: 11px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  z-index: 11;
-  letter-spacing: 0;
+  padding: 12px 2vw 2vh 2vw;
+  padding-top: 0;
 }
 
 /**
@@ -332,7 +369,8 @@ body {
 #style-text {
   position: absolute;
   right: 0.5vw;
-  max-height: 93.1vh;
+  max-height: 80vh;
+  height: 80vh;
 }
 
 /**
@@ -353,16 +391,15 @@ pre.minimized {
   height: 40px !important;
   max-height: 40px !important;
   overflow: hidden !important;
-  padding-bottom: 0 !important;
+  padding: 0 !important;
 }
 
-pre.minimized * {
-  visibility: hidden;
+pre.minimized > *:not(.window-header-sticky) {
+  display: none;
 }
 
-pre.minimized::before,
-pre.minimized .window-controls {
-  visibility: visible;
+pre.minimized .window-header-sticky {
+  visibility: visible !important;
 }
 
 pre.maximized {
@@ -372,6 +409,7 @@ pre.maximized {
   right: 10px !important;
   bottom: 120px !important;
   width: calc(100% - 20px) !important;
+  height: calc(100vh - 130px) !important;
   max-height: calc(100vh - 130px) !important;
-  z-index: 999;
+  z-index: 1000;
 }
