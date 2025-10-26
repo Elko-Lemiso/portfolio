@@ -34,6 +34,15 @@
   transform-origin: bottom center;
 }
 
+/* Hide all dock items except skip button initially */
+.dock-item:not(#skip-animation) {
+  display: none;
+}
+
+.dock-separator {
+  display: none;
+}
+
 /**
  * Each icon in the dock gets that glossy macOS look
  */

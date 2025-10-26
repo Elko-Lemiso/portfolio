@@ -12,9 +12,9 @@ import getPrefix from './lib/getPrefix';
 
 // Vars that will help us get er done
 const isDev = window.location.hostname === 'localhost';
-const speed = isDev ? 0.2 : 16;
-const commentSpeed = speed * 3; // Slower for comments to make it conversational
-const cssSpeed = speed * 0.5; // Faster for CSS properties
+const speed = isDev ? 0.1 : 4; // Much faster animation
+const commentSpeed = speed * 2; // Slower for comments to make it conversational
+const cssSpeed = speed * 0.3; // Faster for CSS properties
 let style, styleEl, workEl, skipAnimationEl, pauseEl;
 let animationSkipped = false, done = false, paused = false;
 let browserPrefix;
@@ -32,27 +32,28 @@ async function startAnimation() {
   try {
     // Phase 0: Introduction and basic styling (comments slow, CSS fast)
     await writeTo(styleEl, styleText[0], 0, commentSpeed, true, 1);
-    await Promise.delay(3000); // Pause after intro so you can read it
+    await Promise.delay(1000); // Pause after intro so you can read it
 
     // Phase 1: Style the dock
     await writeTo(styleEl, styleText[1], 0, speed, true, 1);
-    await Promise.delay(3000); // Pause to admire the dock
+    await Promise.delay(1000); // Pause to admire the dock
 
     // Phase 2: Show portfolio content
     await writeTo(workEl, workText, 0, speed, false, 1);
     createWorkBox();
-    await Promise.delay(2000); // Pause to see the content
+    await Promise.delay(800); // Pause to see the content
 
     // Phase 3: Style the markdown content beautifully
     await writeTo(styleEl, styleText[2], 0, speed, true, 1);
-    await Promise.delay(1500);
+    await Promise.delay(800);
 
     // Phase 4: Final polish
     await writeTo(styleEl, styleText[3], 0, speed, true, 1);
-    await Promise.delay(2000); // Final pause
+    await Promise.delay(1000); // Final pause
 
     // Add window controls after animation completes
     done = true;
+    showAllDockItems(); // Show all dock items after animation
     setTimeout(() => addWindowControls(), 100);
   }
   // Flow control straight from the ghettos of Milwaukee
@@ -84,8 +85,30 @@ async function surprisinglyShortAttentionSpan() {
   // Scroll to top for the new layout
   workEl.scrollTop = 0;
 
+  // Show all dock items
+  showAllDockItems();
+
   // Add window controls after animation
   setTimeout(() => addWindowControls(), 100);
+}
+
+// Show all dock items after animation completes
+function showAllDockItems() {
+  const dockItems = document.querySelectorAll('.dock-item:not(#skip-animation)');
+  dockItems.forEach(item => {
+    item.style.display = 'flex';
+  });
+
+  // Show separators
+  const separators = document.querySelectorAll('.dock-separator');
+  separators.forEach(sep => {
+    sep.style.display = 'block';
+  });
+
+  // Hide skip button after animation
+  if (skipAnimationEl) {
+    skipAnimationEl.style.display = 'none';
+  }
 }
 
 
