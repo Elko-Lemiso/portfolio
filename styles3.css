@@ -1,39 +1,73 @@
 
 /**
- * We're almost done.
+ * We're almost done. Let's add some final polish.
  */
 
- pre:hover{
-   box-shadow: 0px 0px 40px 5px rgba(255,255,255,0.4);
- }
+pre:hover {
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.8),
+    0 0 0 0.5px rgba(255, 255, 255, 0.15) inset,
+    0 1px 0 rgba(255, 255, 255, 0.2) inset;
+  transform: translateY(-4px) scale(1.005);
+  -webkit-transform: translateY(-4px) scale(1.005);
+}
 
- #skip-animation, #pause-resume {
-   display: none;
- }
-
-/**
- * I hope you enjoyed this.
-/**
- * By the way, you can edit this box. Try adding new CSS!
- *
- * For example,
- *
- * The property 'text-shadow' takes the parameters:
- * 'x', 'y', 'blur', 'color'.
- *
- * So if I wanted to mirror the values,
- * I could place a shadow 15px under it,
- * with a little blur for effect:
- */
-
-.value {
-  text-shadow: 0px 15px 1px white;
+/* Hide dock items after animation */
+.dock-item#skip-animation.hidden,
+.dock-item#pause-resume.hidden {
+  display: none;
 }
 
 /**
- * Try it out! There's lots you can do.
- * Try playing with text sizes, shadows, animations, or just
- * break the page. I won't hold it against you.
+ * I hope you enjoyed this experience.
+ *
+ * By the way, try dragging these windows around!
+ * You can resize them, minimize them, and maximize them too.
+ *
+ * Feel free to explore and play around.
  */
 
+.value {
+  text-shadow:
+    0px 15px 2px rgba(244, 114, 182, 0.3),
+    0 0 10px rgba(244, 114, 182, 0.5);
+}
 
+/* Additional stunning effects */
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+      0 2px 8px rgba(168, 85, 247, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+      0 2px 16px rgba(168, 85, 247, 0.5);
+  }
+}
+
+pre:not(:empty) {
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.comment {
+  animation: commentGlow 3s ease-in-out infinite;
+}
+
+@keyframes commentGlow {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/**
+ * Perfect! Now you have a fully interactive macOS-style portfolio.
+ * Thanks for taking the time to watch this unfold.
+ */

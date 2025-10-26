@@ -1,38 +1,96 @@
-/* I'm cheating a bit */
+/* Modern Glassmorphic Portfolio - Foundation Styles */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
 
 html, body {
-  margin-top: 0;
+  margin: 0;
+  padding: 0;
   height: 100%;
   overflow: hidden;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* Desktop background texture */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: -1;
 }
 
 pre {
   overflow: auto;
   max-height: 90%;
   width: 100%;
-  border-radius: 1px; /* Prevents bad clipping in Chrome */
+  border-radius: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 85, 247, 0.6) rgba(0, 0, 0, 0.2);
+}
+
+/* Modern Custom Scrollbars */
+pre::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  margin: 4px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.8), rgba(59, 130, 246, 0.8));
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(168, 85, 247, 1), rgba(59, 130, 246, 1));
+  background-clip: content-box;
 }
 
 #content {
   position: absolute;
-  top: 0; right: 0; left: 0; bottom: 20px;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 110px;
 }
 
+/* Dock - basic structure, will be styled during animation */
 #header {
   position: absolute;
-  bottom: 0;
-  height: 20px;
-  left: 0;
-  right: 0;
-  padding: 0 10px;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  padding: 6px 12px;
+}
+
+.dock {
+  display: flex;
+  gap: 12px;
+}
+
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
 }
 
 a:after {
-  content: '';
-  padding-right: 5px;
-  border-right-width: 1px;
-  border-right-style: solid;
-  border-color: inherit;
+  content: none;
 }
 
 a:last-of-type:after {
