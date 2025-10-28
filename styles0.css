@@ -6,7 +6,8 @@
  *
  * How about some live coding?
 
- * (P.S You can skip this if you want (see the links below) )
+ * (P.S You can skip this if you want, or try the JavaScript
+ * and HTML editors in the dock below!)
 
  * Still with me ?
  * Awesome! Let's get started.
@@ -412,4 +413,153 @@ pre.maximized {
   height: calc(100vh - 130px) !important;
   max-height: calc(100vh - 130px) !important;
   z-index: 1000;
+}
+
+/**
+ * Terminal tabs for multi-editor interface
+ */
+
+#terminal-window {
+  position: relative;
+}
+
+#terminal-tabs {
+  position: absolute;
+  top: 12px;
+  left: 80px;
+  display: flex;
+  gap: 4px;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+.terminal-tab {
+  padding: 3px 10px;
+  font-size: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  border: 1px solid transparent;
+  backdrop-filter: blur(10px);
+}
+
+.terminal-tab:hover {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.terminal-tab.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.terminal-editor {
+  display: none;
+  min-height: 300px;
+  padding: 10px 0;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #a0e9ff;
+  white-space: pre-wrap;
+  outline: none;
+}
+
+.terminal-editor.active {
+  display: block !important;
+}
+
+.terminal-editor:empty:before {
+  content: attr(placeholder);
+  color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  white-space: pre-wrap;
+}
+
+.terminal-content-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+#console-output {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 150px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  margin-top: 10px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+  font-size: 11px;
+  color: #a0a0a0;
+  display: none;
+  z-index: 10;
+  border-radius: 4px;
+}
+
+#console-output.active {
+  display: block;
+}
+
+.console-line {
+  margin: 2px 0;
+  word-wrap: break-word;
+}
+
+.console-line.log {
+  color: #a0a0a0;
+}
+
+.console-line.error {
+  color: #ff6b6b;
+}
+
+.console-line.warn {
+  color: #ffd93d;
+}
+
+.console-line.info {
+  color: #6bcfff;
+}
+
+#html-injection-target {
+  position: relative;
+  z-index: 1;
+}
+
+/* Window titles */
+#js-window::after {
+  content: 'JavaScript — 3lko.com';
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 500;
+  pointer-events: none;
+  z-index: 11;
+}
+
+#html-window::after {
+  content: 'HTML — 3lko.com';
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 500;
+  pointer-events: none;
+  z-index: 11;
 }

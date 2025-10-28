@@ -7,10 +7,10 @@
     "node": "22.x"
   },
   "scripts": {
-    "build": "webpack",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack serve --open",
-    "watch": "webpack --progress --watch"
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --open",
+    "watch": "NODE_OPTIONS=--openssl-legacy-provider webpack --progress --watch"
   },
   "author": "Samuel Reed <samuel.trace.reed@gmail.com> (http://strml.net/)",
   "license": "MIT",

@@ -89,6 +89,15 @@ pre::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
 }
 
+/* Hide all dock items except skip button initially */
+.dock-item:not(#skip-animation) {
+  display: none !important;
+}
+
+.dock-separator {
+  display: none !important;
+}
+
 a:after {
   content: none;
 }

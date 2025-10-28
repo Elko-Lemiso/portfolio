@@ -12,11 +12,12 @@ import getPrefix from './lib/getPrefix';
 
 // Vars that will help us get er done
 const isDev = window.location.hostname === 'localhost';
-const speed = isDev ? 0.1 : 4; // Much faster animation
-const commentSpeed = speed * 2; // Slower for comments to make it conversational
+const speed = isDev ? 0.05 : 2; // Much faster animation - 3x faster than before
+const commentSpeed = isDev ? 0.2 : 16; // Keep comments at original speed for readability
 const cssSpeed = speed * 0.3; // Faster for CSS properties
-let style, styleEl, workEl, skipAnimationEl, pauseEl;
-let animationSkipped = false, done = false, paused = false;
+let style, styleEl, workEl, skipAnimationEl;
+let jsEl, htmlEl, consoleEl, htmlTargetEl;
+let animationSkipped = false, done = false;
 let browserPrefix;
 
 // Wait for load to get started.
@@ -94,20 +95,23 @@ async function surprisinglyShortAttentionSpan() {
 
 // Show all dock items after animation completes
 function showAllDockItems() {
+  console.log('showAllDockItems called');
   const dockItems = document.querySelectorAll('.dock-item:not(#skip-animation)');
+  console.log('Found dock items:', dockItems.length);
   dockItems.forEach(item => {
-    item.style.display = 'flex';
+    console.log('Showing dock item:', item.id);
+    item.style.setProperty('display', 'flex', 'important');
   });
 
   // Show separators
   const separators = document.querySelectorAll('.dock-separator');
   separators.forEach(sep => {
-    sep.style.display = 'block';
+    sep.style.setProperty('display', 'block', 'important');
   });
 
   // Hide skip button after animation
   if (skipAnimationEl) {
-    skipAnimationEl.style.display = 'none';
+    skipAnimationEl.style.setProperty('display', 'none', 'important');
   }
 }
 
@@ -147,9 +151,7 @@ async function writeTo(el, message, index, interval, mirrorToStyle, charsPerInte
     if (endOfBlock.test(thisSlice)) thisInterval = interval * 50;
     if (endOfSentence.test(thisSlice)) thisInterval = interval * 70;
 
-    do {
-      await Promise.delay(thisInterval);
-    } while(paused);
+    await Promise.delay(thisInterval);
 
     return writeTo(el, message, index, interval, mirrorToStyle, charsPerInterval);
   }
@@ -181,7 +183,6 @@ function getEls() {
   styleEl = document.getElementById('style-text');
   workEl = document.getElementById('work-text');
   skipAnimationEl = document.getElementById('skip-animation');
-  pauseEl = document.getElementById('pause-resume');
 }
 
 //
@@ -205,23 +206,6 @@ function createEventHandlers() {
   skipAnimationEl.addEventListener('click', function(e) {
     e.preventDefault();
     animationSkipped = true;
-  });
-
-  pauseEl.addEventListener('click', function(e) {
-    e.preventDefault();
-    if (paused) {
-      const icon = pauseEl.querySelector('.dock-icon');
-      const label = pauseEl.querySelector('.dock-label');
-      if (icon) icon.textContent = "⏸";
-      if (label) label.textContent = "Pause";
-      paused = false;
-    } else {
-      const icon = pauseEl.querySelector('.dock-icon');
-      const label = pauseEl.querySelector('.dock-label');
-      if (icon) icon.textContent = "▶";
-      if (label) label.textContent = "Resume";
-      paused = true;
-    }
   });
 
   // Reopen terminal window
@@ -250,6 +234,24 @@ function createEventHandlers() {
     openJeffrey.addEventListener('click', function(e) {
       e.preventDefault();
       createJeffreyWindow();
+    });
+  }
+
+  // Open JavaScript editor window
+  const openJsEditor = document.getElementById('open-js-editor');
+  if (openJsEditor) {
+    openJsEditor.addEventListener('click', function(e) {
+      e.preventDefault();
+      createJavaScriptWindow();
+    });
+  }
+
+  // Open HTML editor window
+  const openHtmlEditor = document.getElementById('open-html-editor');
+  if (openHtmlEditor) {
+    openHtmlEditor.addEventListener('click', function(e) {
+      e.preventDefault();
+      createHTMLWindow();
     });
   }
 
@@ -713,3 +715,220 @@ function createJeffreyWindow() {
     bringWindowToFront(jeffreyWindow);
   }, 100);
 }
+
+//
+// JavaScript Editor Window
+//
+let jsWindow = null;
+function createJavaScriptWindow() {
+  if (jsWindow) {
+    jsWindow.style.display = 'block';
+    bringWindowToFront(jsWindow);
+    return;
+  }
+
+  jsWindow = document.createElement('pre');
+  jsWindow.id = 'js-window';
+  jsWindow.contentEditable = true;
+  jsWindow.spellcheck = false;
+  jsWindow.textContent = `// JavaScript Editor
+// Write JavaScript code here
+// Press Ctrl+Enter (Cmd+Enter on Mac) to execute
+
+console.log("Hello from JavaScript!");
+
+// Try changing the background
+document.body.style.background = "linear-gradient(45deg, #667eea 0%, #764ba2 100%)";
+
+// Or create elements
+const box = document.createElement('div');
+box.textContent = 'Created with JS!';
+box.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:20px;background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);border-radius:10px;color:white;';
+document.body.appendChild(box);
+`;
+
+  // Style the JS window
+  jsWindow.style.left = '15%';
+  jsWindow.style.top = '25%';
+  jsWindow.style.width = '600px';
+  jsWindow.style.height = '500px';
+
+  // Add console output area
+  const consoleOutput = document.createElement('div');
+  consoleOutput.id = 'js-console';
+  consoleOutput.style.cssText = `
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    font-size: 11px;
+    color: #a0a0a0;
+    overflow-y: auto;
+    font-family: monospace;
+  `;
+  jsWindow.appendChild(consoleOutput);
+
+  // Add to DOM
+  document.getElementById('content').appendChild(jsWindow);
+
+  // Set up execution
+  jsWindow.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      executeJavaScript(jsWindow.textContent);
+    }
+  });
+
+  // Intercept console for this window
+  setupConsoleInterception(consoleOutput);
+
+  // Add window controls
+  setTimeout(() => {
+    addWindowControls();
+    bringWindowToFront(jsWindow);
+  }, 100);
+}
+
+//
+// HTML Editor Window
+//
+let htmlWindow = null;
+function createHTMLWindow() {
+  if (htmlWindow) {
+    htmlWindow.style.display = 'block';
+    bringWindowToFront(htmlWindow);
+    return;
+  }
+
+  htmlWindow = document.createElement('pre');
+  htmlWindow.id = 'html-window';
+  htmlWindow.contentEditable = true;
+  htmlWindow.spellcheck = false;
+  htmlWindow.textContent = `<!-- HTML Editor -->
+<!-- Write HTML here -->
+<!-- Press Ctrl+Enter (Cmd+Enter on Mac) to inject into page -->
+
+<div style="
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+">
+  Hello from HTML! 👋
+  <br>
+  <button onclick="this.parentElement.remove()" style="margin-top:10px;padding:10px 20px;background:rgba(255,255,255,0.2);border:none;border-radius:8px;color:white;cursor:pointer;">
+    Close
+  </button>
+</div>
+`;
+
+  // Style the HTML window
+  htmlWindow.style.left = '25%';
+  htmlWindow.style.top = '20%';
+  htmlWindow.style.width = '600px';
+  htmlWindow.style.height = '450px';
+
+  // Add to DOM
+  document.getElementById('content').appendChild(htmlWindow);
+
+  // Set up injection
+  htmlWindow.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      injectHTML(htmlWindow.textContent);
+    }
+  });
+
+  // Add window controls
+  setTimeout(() => {
+    addWindowControls();
+    bringWindowToFront(htmlWindow);
+  }, 100);
+}
+
+function executeJavaScript(code) {
+  if (!code.trim()) return;
+
+  try {
+    const func = new Function(code);
+    func();
+    if (jsWindow) {
+      const console = jsWindow.querySelector('#js-console');
+      if (console) {
+        const line = document.createElement('div');
+        line.style.color = '#6bcfff';
+        line.textContent = '✓ Code executed successfully';
+        console.appendChild(line);
+        console.scrollTop = console.scrollHeight;
+      }
+    }
+  } catch (error) {
+    if (jsWindow) {
+      const console = jsWindow.querySelector('#js-console');
+      if (console) {
+        const line = document.createElement('div');
+        line.style.color = '#ff6b6b';
+        line.textContent = '✗ Error: ' + error.message;
+        console.appendChild(line);
+        console.scrollTop = console.scrollHeight;
+      }
+    }
+  }
+}
+
+function injectHTML(html) {
+  if (!html.trim()) return;
+
+  const targetEl = document.getElementById('html-injection-target');
+  if (targetEl) {
+    targetEl.innerHTML = html;
+  }
+}
+
+function setupConsoleInterception(consoleEl) {
+  if (!consoleEl) return;
+
+  const originalLog = console.log;
+  const originalError = console.error;
+  const originalWarn = console.warn;
+
+  console.log = function(...args) {
+    const line = document.createElement('div');
+    line.style.color = '#a0a0a0';
+    line.textContent = args.join(' ');
+    consoleEl.appendChild(line);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+    originalLog.apply(console, args);
+  };
+
+  console.error = function(...args) {
+    const line = document.createElement('div');
+    line.style.color = '#ff6b6b';
+    line.textContent = '✗ ' + args.join(' ');
+    consoleEl.appendChild(line);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+    originalError.apply(console, args);
+  };
+
+  console.warn = function(...args) {
+    const line = document.createElement('div');
+    line.style.color = '#ffd93d';
+    line.textContent = '⚠ ' + args.join(' ');
+    consoleEl.appendChild(line);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+    originalWarn.apply(console, args);
+  };
+}
+

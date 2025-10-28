@@ -11,33 +11,21 @@
     <link rel="shortcut icon" href="/ico/favicon.ico" type="image/x-icon" />
   </head>
   <body spellcheck="false">
+    <!-- SVG Filter for Liquid Glass Effect -->
+    <svg style="position: absolute; width: 0; height: 0;">
+      <defs>
+        <filter id="glass-distortion">
+          <feTurbulence type="fractalNoise" baseFrequency="0.01 0.003" numOctaves="3" seed="2" />
+          <feDisplacementMap in="SourceGraphic" scale="20" />
+        </filter>
+      </defs>
+    </svg>
+
     <div id="content">
-      <pre contenteditable id="style-text"></pre>
+      <pre id="style-text" contenteditable></pre>
       <pre id="work-text"></pre>
     </div>
     <div id="header"></div>
+    <div id="html-injection-target"></div>
   </body>
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.2/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.2/firebase-analytics.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-  
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyB3RknrdICh0ZBKErGne6ytZlDFDLTjhpI",
-      authDomain: "portfolio-b9d6d.firebaseapp.com",
-      projectId: "portfolio-b9d6d",
-      storageBucket: "portfolio-b9d6d.appspot.com",
-      messagingSenderId: "620345835743",
-      appId: "1:620345835743:web:caed33d736aa168c69a96a",
-      measurementId: "G-5TD2WQP8WR"
-    };
-  
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script>
 </html>
