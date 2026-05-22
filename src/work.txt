@@ -1,0 +1,98 @@
+Elko Lemiso
+===========
+
+**Fullstack Software Engineer · Partner @ Dissel AI**
+Based in the Netherlands · Building things that work at scale.
+
+AI engineer, full-stack developer, and security practitioner with 5+ years
+across product companies, security firms, and AI startups. Shipping
+automated pen-testing systems, AI content pipelines, and agent-driven
+products. Rust enthusiast, CTF competitor, chess club founder.
+
+Currently
+---------
+* **[ROLE]** Partner & AI Engineer at Dissel AI
+* **[FOCUS]** LLM pipelines · Agent systems · Rust tooling
+* **[SIDE]** City To Do · AMSC · CTFs · Chess
+
+Experience
+----------
+
+* **Dissel AI — Partner / AI Engineer** *(Sep 2025 – Present)*
+  Co-founded an AI engineering company. Secured HelloPrint as first client and delivered a full AI content pipeline from discovery to production. Architecting agent-driven products and LLM pipelines for enterprise across content, translation, and media generation. Leading technical strategy, product, and delivery.
+  [TypeScript, Rust, LLMs, Agents]
+
+* **HelloPrint — Freelance Full-Stack Developer** *(Jun 2025 – Aug 2025)*
+  Cut product onboarding from one week to under five minutes by building an end-to-end AI pipeline covering photography, video, icons, copy, and translation across ~8,500 SKUs. Built prompt-guided translation agents localising content across 7–8 languages via Contentful. Architected a tiered colour-detection pipeline (catalogue heuristics → RGB dominant extraction with sharp → LLM fallback → manual review).
+  [Node.js, Contentful, sharp, LLMs]
+
+* **Uprent — Full-Stack Developer** *(Jan 2025 – May 2025)*
+  Built AI agents aggregating live listings from 9–10 Dutch housing platforms into a single ranked feed, growing to 8,000+ users during the NL housing crisis. Shipped a browser extension with real-time alerts and AI-assisted property comparison, plus a Telegram chatbot for push notifications and filtering.
+  [TypeScript, Browser Extensions, Telegram API]
+
+* **Breachlock — Full-Stack Developer / Security Engineer** *(Nov 2022 – Dec 2024, Amsterdam)*
+  Designed and built an automated AI penetration-testing system that generated deliverables, ran structured attack sequences, and produced client reports — adopted by ~20 pen testers organisation-wide. Built the data sniffer and activity-monitoring dashboard tracking pen-tester workflow across concurrent engagements. Authored the structured checklist system that became the backbone for both automated and manual testing. Wrote a 20–30 test regression suite over the internal monitoring stack. Shipped performance-critical Rust tooling for network monitoring. Competed in CTFs; identified XSS, SQLi, and other critical vulnerabilities across client networks. Founded the company chess club.
+  [Rust, Node.js, Security, AI Agents]
+
+* **InQommon / WorkSuite — Full-Stack Developer** *(Jul 2021 – Feb 2023, Amsterdam)*
+  Designed a secure, scalable architecture in Node.js, Express, React, and MongoDB. Built real-time chat and video calling utilities on Twilio. Stood up CI/CD pipelines with Docker for automated build and deploy.
+  [React, Node.js, MongoDB, Twilio, Docker]
+
+* **WaveScale — Site Reliability Engineer** *(Jul 2021 – Feb 2023, Utrecht)*
+  Implemented monitoring and scalability strategies to improve reliability and uptime. Analysed architecture to find bottlenecks; ran performance, stress, and regression testing. Advised on cloud infrastructure design and maintenance.
+  [SRE, Monitoring, Cloud]
+
+* **Relevant Online — Full-Stack Developer** *(Aug 2020 – Feb 2021, Utrecht)*
+  Developed, tested, and debugged web applications; optimised architecture for scalability and performance. Integrated third-party APIs and supported web server configuration.
+  [JavaScript, REST APIs]
+
+Selected Projects
+-----------------
+
+* **AMSC — Athletic App**
+  Live mobile app for athletic performance tracking; active users in production.
+  [Mobile, Realtime]
+
+* **City To Do**
+  City-based discovery and task app — listed on the App Store, currently in development.
+  [Mobile, Maps]
+
+* **Task It**
+  Productivity app available as both a WhatsApp chatbot and a native app.
+  [WhatsApp API, Mobile]
+
+* **Script Editor**
+  Custom script-editing software built for creative and technical writing workflows.
+  [Desktop, Editors]
+
+* **Home Search App**
+  Personal property search tool aggregating and filtering local listings.
+  [AI Aggregation]
+
+* **Client Websites**
+  Delivered websites and web products for SWAT, Huini Studios, Action It, and others.
+  [Web, Design]
+
+Stack
+-----
+* **Languages** JavaScript / TypeScript, Rust, Python
+* **AI & Agents** LLM integration, prompt engineering, agent pipelines, AI content & media generation
+* **Frontend** React, HTML/CSS, UI design, browser extensions
+* **Backend** Node.js, Express, MongoDB, microservices, REST APIs
+* **CMS & Content** Contentful, mass translation, image processing (sharp), content pipelines
+* **Messaging** Twilio, Telegram Bot API, WhatsApp Business API, real-time chat
+* **DevOps** Docker, CI/CD, GitHub, cloud infrastructure, monitoring
+* **Security** Penetration testing, CTF, XSS / SQLi, auth protocols, encryption
+* **Practices** TDD, code review, refactoring, OOP, microcontrollers, agile
+
+Off the clock
+-------------
+Chess (club founder) · Brazilian Jiu-Jitsu · Running · Bouldering ·
+Bass guitar & keyboard · Film & creative storytelling.
+
+Contact
+-------
+* **Email:** elkovandongen@gmail.com
+* **LinkedIn:** linkedin.com/in/elko-lemiso
+* **GitHub:** github.com/Elko-Lemiso
+* **Site:** www.3lko.com

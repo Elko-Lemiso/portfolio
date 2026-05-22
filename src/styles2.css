@@ -1,0 +1,163 @@
+/**
+ * Time to display your information!
+ * Let's render that markdown content nicely.
+ */
+
+#work-text.flipped {
+  /* Keep it flat and simple */
+  box-shadow:
+    0 30px 100px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+#work-text .md {
+  margin-top: 0;
+  padding: 24px 32px;
+}
+
+/**
+ * Now let's make that text look beautiful.
+ */
+
+.md {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+}
+
+.md h1 {
+  font-size: 2.5em;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  font-weight: 800;
+  background: linear-gradient(120deg, #fff 30%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+  display: inline-block;
+  position: relative;
+}
+
+.md h1::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #a78bfa, transparent);
+  margin-top: 8px;
+  opacity: 0.5;
+}
+
+.md h2 {
+  font-size: 1.4em;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  color: #22d3ee;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.md h2::before {
+  content: '#';
+  color: rgba(34, 211, 238, 0.3);
+  font-weight: 400;
+}
+
+.md p {
+  margin-bottom: 24px;
+  font-size: 1.05em;
+  color: #94a3b8;
+}
+
+.md strong {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+/* Specific styling for the header block */
+.md h1+p {
+  font-size: 1.2em;
+  color: #e2e8f0;
+  margin-bottom: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 20px;
+}
+
+.md ul {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: grid;
+  gap: 16px;
+  /* increased gap */
+}
+
+.md li {
+  padding: 20px 24px;
+  padding-left: 50px;
+  background: rgba(30, 41, 59, 0.4);
+  /* Darker, more distinct cards */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Style the project title inside list items (assuming format "Title - Description") */
+.md li strong:first-child {
+  font-size: 1.1em;
+  color: #fff;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.md li::before {
+  content: '✦';
+  position: absolute;
+  left: 20px;
+  top: 24px;
+  /* Align with title */
+  transform: none;
+  color: #a78bfa;
+  font-size: 1.2em;
+  transition: all 0.3s ease;
+}
+
+.md li:hover {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(167, 139, 250, 0.3);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.md li:hover::before {
+  color: #22d3ee;
+  transform: rotate(90deg);
+}
+
+.md a {
+  color: #22d3ee;
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px dashed rgba(34, 211, 238, 0.5);
+  transition: all 0.2s ease;
+  padding-bottom: 2px;
+}
+
+.md a:hover {
+  color: #fff;
+  border-bottom-style: solid;
+  border-bottom-color: #fff;
+  background: rgba(34, 211, 238, 0.2);
+}
+
+/**
+ * Almost done! Just a few final touches...
+ */

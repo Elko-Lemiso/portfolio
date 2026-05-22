@@ -19,9 +19,18 @@
  * (Not everything - that would be slow!)
  */
 
-pre, .window-button, .resize-handle, .dock-item {
+pre,
+.window-button,
+.resize-handle,
+.dock-item {
   -webkit-transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+}
+
+/* Optimization for dragging - override the above */
+pre.is-dragging,
+pre.is-resizing {
+  transition: none !important;
 }
 
 /**
@@ -32,20 +41,54 @@ pre, .window-button, .resize-handle, .dock-item {
  */
 
 html {
-  background: linear-gradient(135deg,
-    #000000 0%,
-    #1a1a2e 30%,
-    #16213e 60%,
-    #0f3460 100%);
-  background-size: 400% 400%;
-  animation: gradientShift 40s ease infinite;
-  background-attachment: fixed;
+  background:
+    radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+  background-color: #0f172a;
+  background-size: 100% 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background:
+    radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.15), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.15), transparent 25%);
+  filter: blur(40px);
+  z-index: -2;
+  animation: floatingGlow 15s ease-in-out infinite alternate;
+}
+
+@keyframes floatingGlow {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(20px, 20px);
+  }
 }
 
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /***
@@ -67,27 +110,48 @@ a {
 
 pre:not(:empty) {
   overflow: auto;
-  background: rgba(28, 28, 32, 0.92);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  border: 0.5px solid rgba(0, 0, 0, 0.5);
-  max-height: 45vh;
+  background: rgba(15, 23, 42, 0.85);
+  /* Slightly clearer dark blue/slate */
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    /* Deep shadow */
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  /* Inner border glow */
+  /* max-height: 45vh;  <-- REMOVED: Allow full resizing */
   width: 49%;
   font-size: 14px;
-  font-family: 'SF Mono', 'Monaco', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'SF Mono', 'Monaco', monospace;
   padding: 0;
   padding-top: 40px;
-  box-shadow:
-    0 25px 80px rgba(0, 0, 0, 0.7),
-    0 0 0 0.5px rgba(255, 255, 255, 0.05) inset,
-    0 1px 0 rgba(255, 255, 255, 0.1) inset;
   white-space: pre-wrap;
   outline: 0;
   margin: 3vh 0.5vw;
-  border-radius: 10px;
-  line-height: 1.6;
-  letter-spacing: 0.2px;
-  position: relative;
+  border-radius: 12px;
+  line-height: 1.5;
+  letter-spacing: -0.04em;
+  /* Tighten character spacing */
+  word-spacing: -1px;
+  -webkit-font-smoothing: antialiased;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  color: #e2e8f0;
+}
+
+/* Subtle texture overlay for retro tech feel */
+pre:not(:empty)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  border-radius: 12px;
 }
 
 /* Sticky Header Container */
@@ -97,14 +161,13 @@ pre:not(:empty) {
   left: 0;
   right: 0;
   width: 100%;
-  height: 40px;
+  height: 42px;
   z-index: 100;
-  background: rgba(46, 46, 50, 0.98);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.5);
-  border-radius: 10px 10px 0 0;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  background: rgba(30, 41, 59, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px 12px 0 0;
   margin: 0;
   margin-left: -2vw;
   margin-right: -2vw;
@@ -335,22 +398,27 @@ pre:not(:empty) {
   font-style: italic;
   opacity: 0.9;
 }
+
 .selector {
   color: #06b6d4;
   font-weight: 600;
   text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
 }
+
 .selector .key {
   color: #a78bfa;
 }
+
 .key {
   color: #a78bfa;
   font-weight: 500;
 }
+
 .value {
   color: #f472b6;
   font-weight: 500;
 }
+
 .value.px {
   color: #22d3ee;
   font-weight: 600;
@@ -370,8 +438,9 @@ body {
 #style-text {
   position: absolute;
   right: 0.5vw;
-  max-height: 80vh;
+  /* max-height: 80vh; <-- REMOVED */
   height: 80vh;
+  /* Initial height, but resizable */
 }
 
 /**
@@ -388,31 +457,19 @@ pre:not(#style-text) {
  * Window states - minimized and maximized
  */
 
+/**
+ * Window states - minimized and maximized
+ * Styled via JS transitions now for smoothness
+ */
+
 pre.minimized {
-  height: 40px !important;
-  max-height: 40px !important;
-  overflow: hidden !important;
-  padding: 0 !important;
-}
-
-pre.minimized > *:not(.window-header-sticky) {
-  display: none;
-}
-
-pre.minimized .window-header-sticky {
-  visibility: visible !important;
+  pointer-events: none;
 }
 
 pre.maximized {
-  position: fixed !important;
-  top: 10px !important;
-  left: 10px !important;
-  right: 10px !important;
-  bottom: 120px !important;
-  width: calc(100% - 20px) !important;
-  height: calc(100vh - 130px) !important;
-  max-height: calc(100vh - 130px) !important;
-  z-index: 1000;
+  /* Styling handled by JS for animation */
+  border-radius: 8px !important;
+  /* Slightly tighter corner on full screen */
 }
 
 /**
@@ -562,4 +619,10 @@ pre.maximized {
   font-weight: 500;
   pointer-events: none;
   z-index: 11;
+}
+
+/* Editor windows need special padding handling */
+.editor-window {
+  padding: 0 !important;
+  padding-top: 40px !important;
 }
