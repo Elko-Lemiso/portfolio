@@ -1,122 +1,227 @@
 /**
- * Final polish.
+ * Final states, responsive behavior, and accessibility.
  */
 
-/* Premium hover for windows */
 pre:hover {
-  box-shadow:
-    0 30px 90px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-    0 2px 0 rgba(255, 255, 255, 0.08) inset;
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: none;
 }
 
-/* Hide dock items after animation */
 .dock-item#skip-animation.hidden,
 .dock-item#pause-resume.hidden {
   display: none !important;
 }
 
-/**
- * Final syntax-highlight polish.
- */
-.value {
-  text-shadow: 0 0 12px rgba(244, 114, 182, 0.35);
-}
-
-.selector {
-  text-shadow: 0 0 12px rgba(6, 182, 212, 0.35);
-}
-
-/**
- * Subtle active-window glow. Single keyframe, low intensity so it reads as
- * "alive" rather than "blinking".
- */
-@keyframes activeGlow {
-  0%, 100% { border-color: rgba(255, 255, 255, 0.10); }
-  50%      { border-color: rgba(255, 255, 255, 0.22); }
-}
-
-pre:not(:empty) {
-  animation: activeGlow 6s ease-in-out infinite;
-  transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
-              transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
-              border-color 0.3s ease;
-}
-
-/* No transitions / animations while dragging or resizing */
 pre.is-dragging,
 pre.is-resizing {
-  transition: none !important;
-  animation: none !important;
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55) !important;
+  box-shadow: none !important;
 }
 
-/**
- * Jeffrey window — keep video visible edge-to-edge.
- */
 .glass-content-wrapper {
-  padding: 0;
-  text-align: center;
-  height: 100%;
-  width: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #000;
+  width: 100%;
+  height: calc(100% - 44px);
+  padding: 0;
   overflow: hidden;
-  border-radius: 0 0 12px 12px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  background: #000000;
 }
 
 .jeffrey-video {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 0;
-  display: block;
-  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  filter: grayscale(1) contrast(1.08);
 }
 
-.jeffrey-video:hover {
-  transform: scale(1.02);
-}
-
-/**
- * Refined scrollbars (global).
- */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(168, 85, 247, 0.6), rgba(59, 130, 246, 0.6));
-  border-radius: 10px;
+  background: #6f6f6f;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(168, 85, 247, 0.9), rgba(59, 130, 246, 0.9));
-  background-clip: content-box;
+@media (max-width: 1080px) {
+  #work-text {
+    width: calc(61% - 5px);
+  }
+
+  #style-text {
+    width: calc(39% - 5px);
+  }
+
+  .dock-item {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .dock-status {
+    display: none;
+  }
 }
 
-/**
- * Desktop vignette — very subtle, no scanlines, no RGB channel smear.
- */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 99998;
-  background:
-    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.35) 100%);
+@media (max-width: 760px) {
+  #content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  pre:not(:empty),
+  #work-text,
+  #style-text,
+  #js-window,
+  #html-window,
+  #jeffrey-window {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  #work-text {
+    order: 1;
+    height: auto !important;
+    min-height: calc(100dvh - 84px);
+    overflow: visible;
+  }
+
+  #style-text {
+    order: 2;
+    height: 36dvh !important;
+    min-height: 240px;
+    overflow: auto;
+  }
+
+  #js-window,
+  #html-window,
+  #jeffrey-window {
+    position: fixed !important;
+    inset: 8px 8px 68px !important;
+    z-index: 2200 !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  .resize-handle {
+    display: none;
+  }
+
+  .window-titlebar-draggable {
+    cursor: default;
+  }
+
+  #header {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  #header::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dock {
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .dock-spacer,
+  .dock-separator,
+  .dock-status {
+    display: none !important;
+  }
+
+  .dock-item {
+    min-width: 52px;
+    padding: 0 12px;
+  }
+
+  .dock-label {
+    display: none;
+  }
+
+  #work-text .window-header-sticky,
+  #style-text .window-header-sticky {
+    cursor: default;
+  }
+
+  #work-text .md {
+    padding: 42px 20px 72px;
+  }
+
+  .md h1 {
+    font-size: clamp(56px, 20vw, 88px);
+  }
+
+  .md h2 {
+    grid-template-columns: 42px 1fr;
+  }
+
+  .md h2:first-of-type + ul,
+  .md h2:nth-of-type(3) + ul,
+  .md h2:nth-of-type(4) + ul,
+  .md h2:nth-of-type(6) + ul {
+    display: block;
+  }
+
+  .md h2:first-of-type + ul li,
+  .md h2:nth-of-type(3) + ul li,
+  .md h2:nth-of-type(4) + ul li,
+  .md h2:nth-of-type(6) + ul li {
+    min-height: 0;
+    padding: 18px 14px 20px 44px;
+    border-right: 0;
+    border-bottom: 1px solid #0a0a0a;
+  }
+
+  .md h2:first-of-type + ul li::before {
+    top: 21px;
+    left: 0;
+  }
+
+  .md h2:first-of-type + ul li:last-child,
+  .md h2:nth-of-type(3) + ul li:last-child,
+  .md h2:nth-of-type(4) + ul li:last-child,
+  .md h2:nth-of-type(6) + ul li:last-child {
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 390px) {
+  .dock-item {
+    min-width: 48px;
+    padding: 0 10px;
+  }
+
+  .md h1 {
+    font-size: 52px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

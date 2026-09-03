@@ -5,7 +5,6 @@ import workText from 'raw-loader!./work.txt';
 import headerHTML from 'raw-loader!./header.html';
 let styleText = [0, 1, 2, 3].map((i) => require('raw-loader!./styles' + i + '.css').default);
 import preStyles from 'raw-loader!./prestyles.css';
-import replaceURLs from './lib/replaceURLs';
 import writeChar, { flushBuffer, applySyntaxHighlighting } from './lib/writeChar';
 import getPrefix from './lib/getPrefix';
 import * as CONSTANTS from './constants';
@@ -15,12 +14,11 @@ import { WindowManager } from './modules/windowManager';
 import { AnimationDirector } from './modules/animationDirector';
 
 // Globals
-// localhost defaults to dev (fast) but ?prod=1 forces the full animation
-// so we can preview the production experience. ?dev=1 forces dev from any host.
+// The portfolio renders immediately by default. The original live-coding intro
+// remains available via ?intro=1 without delaying first-time visitors.
 const search = window.location.search;
-const isDev =
-  (/[?&]dev=1\b/.test(search)) ||
-  (window.location.hostname === 'localhost' && !/[?&]prod=1\b/.test(search));
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const shouldPlayIntro = /[?&]intro=1\b/.test(search) && !prefersReducedMotion;
 let style, styleEl, workEl, skipAnimationEl;
 let browserPrefix;
 
@@ -37,9 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 async function start() {
-  // In dev we don't want to wait ~60s for the typing animation every reload.
-  // Render the final state immediately instead.
-  if (isDev) {
+  // Put the work first. The optional intro is an easter egg, not a gate.
+  if (!shouldPlayIntro) {
     surprisinglyShortAttentionSpan();
     return;
   }
@@ -53,11 +50,12 @@ async function start() {
       createWorkBox,
       showDock: showAllDockItems,
       addControls: () => {
-        WindowManager.makeWindow(styleEl, 'Terminal — 3lko.com');
+        prepareStyleEditor();
+        WindowManager.makeWindow(styleEl, 'Terminal — Source');
         WindowManager.makeWindow(workEl, 'Portfolio — Elko Lemiso');
         scrollPanesToTop();
       },
-      isDev
+      isDev: false
     });
   } catch (e) {
     if (e.message === "SKIP IT") {
@@ -70,7 +68,7 @@ async function start() {
 
 function createWorkBox() {
   if (workEl.classList.contains('flipped')) return;
-  workEl.innerHTML = '<div class="md">' + replaceURLs(md(workText)) + '</div>';
+  workEl.innerHTML = '<div class="md">' + md(workText) + '</div>';
   workEl.classList.add('flipped');
   workEl.scrollTop = 0;
 
@@ -91,12 +89,13 @@ function surprisinglyShortAttentionSpan() {
 
   // Fill the style pane with fully-highlighted CSS in one shot
   styleEl.innerHTML = applySyntaxHighlighting(txt);
+  prepareStyleEditor();
   createWorkBox();
 
   showAllDockItems();
 
   setTimeout(() => {
-    WindowManager.makeWindow(styleEl, 'Terminal — 3lko.com');
+    WindowManager.makeWindow(styleEl, 'Terminal — Source');
     WindowManager.makeWindow(workEl, 'Portfolio — Elko Lemiso');
     scrollPanesToTop();
   }, CONSTANTS.WINDOW_CONTROLS_DELAY);
@@ -110,6 +109,25 @@ function scrollPanesToTop() {
     if (workEl) workEl.scrollTop = 0;
     if (styleEl) styleEl.scrollTop = 0;
   });
+}
+
+function prepareStyleEditor() {
+  if (styleEl.querySelector('.style-editor-surface')) return;
+
+  const editor = document.createElement('code');
+  editor.className = 'style-editor-surface';
+  editor.contentEditable = true;
+  editor.spellcheck = false;
+  editor.setAttribute('role', 'textbox');
+  editor.setAttribute('aria-multiline', 'true');
+  editor.setAttribute('aria-label', 'Editable CSS source');
+
+  while (styleEl.firstChild) {
+    editor.appendChild(styleEl.firstChild);
+  }
+
+  styleEl.contentEditable = false;
+  styleEl.appendChild(editor);
 }
 
 function showAllDockItems() {
@@ -147,14 +165,17 @@ function populateHeader() {
 
 function createEventHandlers() {
   styleEl.addEventListener('input', function () {
-    style.textContent = styleEl.textContent;
+    const editor = styleEl.querySelector('.style-editor-surface');
+    style.textContent = editor ? editor.textContent : styleEl.textContent;
   });
 
-  skipAnimationEl.addEventListener('click', function (e) {
-    e.preventDefault();
-    window.animationSkipped = true;
-    surprisinglyShortAttentionSpan();
-  });
+  if (skipAnimationEl) {
+    skipAnimationEl.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.animationSkipped = true;
+      surprisinglyShortAttentionSpan();
+    });
+  }
 
   // Dock items
   const bindClick = (id, handler) => {
@@ -168,11 +189,23 @@ function createEventHandlers() {
   bindClick('reopen-terminal', () => {
     styleEl.style.display = 'block';
     WindowManager.bringToFront(styleEl);
+    if (window.matchMedia('(max-width: 760px)').matches) {
+      styleEl.scrollIntoView({
+        behavior: 'auto',
+        block: 'start'
+      });
+    }
   });
 
   bindClick('reopen-portfolio', () => {
     workEl.style.display = 'block';
     WindowManager.bringToFront(workEl);
+    if (window.matchMedia('(max-width: 760px)').matches) {
+      workEl.scrollIntoView({
+        behavior: 'auto',
+        block: 'start'
+      });
+    }
   });
 
   bindClick('open-jeffrey', () => WindowManager.createJeffreyWindow());

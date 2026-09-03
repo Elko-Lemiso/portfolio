@@ -1,7 +1,7 @@
 Elko Lemiso
 ===========
 
-**Fullstack Software Engineer · Partner @ Dissel AI**
+**Full-stack Software Engineer · Partner @ Dissel AI**
 Based in the Netherlands · Building things that work at scale.
 
 AI engineer, full-stack developer, and security practitioner with 5+ years
@@ -92,7 +92,6 @@ Bass guitar & keyboard · Film & creative storytelling.
 
 Contact
 -------
-* **Email:** elkovandongen@gmail.com
-* **LinkedIn:** linkedin.com/in/elko-lemiso
-* **GitHub:** github.com/Elko-Lemiso
-* **Site:** www.3lko.com
+* **Email:** [elkovandongen@gmail.com](mailto:elkovandongen@gmail.com)
+* **LinkedIn:** [linkedin.com/in/elko-lemiso](https://linkedin.com/in/elko-lemiso/)
+* **GitHub:** [github.com/Elko-Lemiso](https://github.com/Elko-Lemiso)

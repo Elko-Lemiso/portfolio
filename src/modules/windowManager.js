@@ -53,7 +53,7 @@ export const WindowManager = {
     windowEl.insertBefore(headerContainer, windowEl.firstChild);
 
     // Add buttons
-    this.addWindowButtons(windowEl, controls);
+    this.addWindowButtons(windowEl, controls, title);
 
     // Add dragging functionality
     this.makeDraggable(windowEl, titleBar);
@@ -65,12 +65,20 @@ export const WindowManager = {
     registerEventListener(windowEl, 'mousedown', () => this.bringToFront(windowEl));
   },
 
-  addWindowButtons: function (windowEl, controls) {
+  addWindowButtons: function (windowEl, controls, title) {
+    const windowName = title || 'window';
+
     // Close button
-    const closeBtn = document.createElement('div');
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
     closeBtn.className = 'window-button close';
+    closeBtn.title = `Close ${windowName}`;
+    closeBtn.setAttribute('aria-label', `Close ${windowName}`);
     registerEventListener(closeBtn, 'click', (e) => {
       e.stopPropagation();
+      closeBtn.blur();
+      windowEl.inert = true;
+      windowEl.setAttribute('aria-hidden', 'true');
       windowEl.style.display = 'none';
       if (windowEl.id === 'jeffrey-window') {
         const video = windowEl.querySelector('video');
@@ -79,18 +87,24 @@ export const WindowManager = {
     });
 
     // Minimize button
-    const minimizeBtn = document.createElement('div');
+    const minimizeBtn = document.createElement('button');
+    minimizeBtn.type = 'button';
     minimizeBtn.className = 'window-button minimize';
+    minimizeBtn.title = `Minimize ${windowName}`;
+    minimizeBtn.setAttribute('aria-label', `Minimize ${windowName}`);
     registerEventListener(minimizeBtn, 'click', (e) => {
       e.stopPropagation();
       if (windowEl.classList.contains('minimized')) {
         // Restore
         windowEl.classList.remove('minimized');
+        windowEl.inert = false;
+        windowEl.removeAttribute('aria-hidden');
         windowEl.style.transform = 'none';
         windowEl.style.opacity = '1';
         this.bringToFront(windowEl);
       } else {
         // Minimize (Genie-ish effect)
+        minimizeBtn.blur();
         windowEl.classList.add('minimized');
         const rect = windowEl.getBoundingClientRect();
         const viewportH = window.innerHeight;
@@ -103,12 +117,17 @@ export const WindowManager = {
 
         windowEl.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.1)`;
         windowEl.style.opacity = '0';
+        windowEl.inert = true;
+        windowEl.setAttribute('aria-hidden', 'true');
       }
     });
 
     // Maximize button
-    const maximizeBtn = document.createElement('div');
+    const maximizeBtn = document.createElement('button');
+    maximizeBtn.type = 'button';
     maximizeBtn.className = 'window-button maximize';
+    maximizeBtn.title = `Maximize ${windowName}`;
+    maximizeBtn.setAttribute('aria-label', `Maximize ${windowName}`);
     registerEventListener(maximizeBtn, 'click', (e) => {
       e.stopPropagation();
       if (windowEl.classList.contains('maximized')) {
@@ -282,6 +301,9 @@ export const WindowManager = {
   },
 
   bringToFront: function (windowEl) {
+    windowEl.inert = false;
+    windowEl.removeAttribute('aria-hidden');
+
     // If minimized, restore it first
     if (windowEl.classList.contains('minimized')) {
       windowEl.classList.remove('minimized');
@@ -326,7 +348,7 @@ export const WindowManager = {
     document.getElementById('content').appendChild(jeffreyWindow);
     // Add controls slightly delayed ensuring DOM presence
     setTimeout(() => {
-      this.makeWindow(jeffreyWindow, 'Jeffrey — 3lko.com');
+      this.makeWindow(jeffreyWindow, 'Jeffrey — Film loop');
       this.bringToFront(jeffreyWindow);
     }, 0);
   },
@@ -340,27 +362,36 @@ export const WindowManager = {
 
     jsWindow = document.createElement('pre');
     jsWindow.id = 'js-window';
-    jsWindow.contentEditable = true;
+    jsWindow.className = 'editor-window';
     jsWindow.spellcheck = false;
-    jsWindow.textContent = `// JavaScript Editor
-console.log("Hello!");
-document.body.style.background = "#1a1a2e";`;
+
+    const codeEditor = document.createElement('code');
+    codeEditor.className = 'editor-surface';
+    codeEditor.contentEditable = true;
+    codeEditor.spellcheck = false;
+    codeEditor.setAttribute('role', 'textbox');
+    codeEditor.setAttribute('aria-multiline', 'true');
+    codeEditor.setAttribute('aria-label', 'JavaScript editor');
+    codeEditor.textContent = `// Press Cmd/Ctrl + Enter to run
+console.log("Hello from Elko's portfolio");
+document.body.style.background = "#111111";`;
+    jsWindow.appendChild(codeEditor);
 
     Object.assign(jsWindow.style, CONSTANTS.DEFAULT_WINDOW_CONFIG.JAVASCRIPT);
 
     // Add console output div
     const consoleOutput = document.createElement('div');
     consoleOutput.id = 'js-console';
-    consoleOutput.style.cssText = `position: absolute; bottom: 0; left: 0; right: 0; height: ${CONSTANTS.CONSOLE_PANEL_HEIGHT}px; background: rgba(0,0,0,0.3); color: #fff; font-size: 11px; padding: 10px; overflow-y: auto;`;
+    consoleOutput.setAttribute('aria-live', 'polite');
     jsWindow.appendChild(consoleOutput);
 
     document.getElementById('content').appendChild(jsWindow);
 
     // Key handler for execution
-    registerEventListener(jsWindow, 'keydown', (e) => {
+    registerEventListener(codeEditor, 'keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();
-        this.executeJS(jsWindow.textContent, consoleOutput);
+        this.executeJS(codeEditor.textContent, consoleOutput);
       }
     });
 
@@ -400,19 +431,35 @@ document.body.style.background = "#1a1a2e";`;
 
     htmlWindow = document.createElement('pre');
     htmlWindow.id = 'html-window';
-    htmlWindow.contentEditable = true;
+    htmlWindow.className = 'editor-window';
     htmlWindow.spellcheck = false;
-    htmlWindow.textContent = `<!-- HTML Editor -->\n<div>Hello World</div>`;
+
+    const htmlEditor = document.createElement('code');
+    htmlEditor.className = 'editor-surface';
+    htmlEditor.contentEditable = true;
+    htmlEditor.spellcheck = false;
+    htmlEditor.setAttribute('role', 'textbox');
+    htmlEditor.setAttribute('aria-multiline', 'true');
+    htmlEditor.setAttribute('aria-label', 'HTML editor');
+    htmlEditor.textContent = `<!-- Press Cmd/Ctrl + Enter to render -->\n<div>Hello World</div>`;
+    htmlWindow.appendChild(htmlEditor);
+
+    const preview = document.createElement('div');
+    preview.className = 'html-preview';
+    preview.setAttribute('role', 'region');
+    preview.setAttribute('aria-live', 'polite');
+    preview.setAttribute('aria-label', 'HTML preview');
+    preview.innerHTML = '<div>Hello World</div>';
+    htmlWindow.appendChild(preview);
 
     Object.assign(htmlWindow.style, CONSTANTS.DEFAULT_WINDOW_CONFIG.HTML);
 
     document.getElementById('content').appendChild(htmlWindow);
 
-    registerEventListener(htmlWindow, 'keydown', (e) => {
+    registerEventListener(htmlEditor, 'keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();
-        const target = document.getElementById('html-injection-target');
-        if (target) target.innerHTML = htmlWindow.textContent;
+        preview.innerHTML = htmlEditor.textContent;
       }
     });
 

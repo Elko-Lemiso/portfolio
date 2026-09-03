@@ -1,33 +1,71 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>Elko: Projects and Work</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Elko Lemiso — AI Engineer &amp; Full-Stack Developer</title>
+    <meta
+      name="description"
+      content="Elko Lemiso is an AI engineer and full-stack developer building agent systems, security tooling, and production software."
+    >
+    <meta name="author" content="Elko Lemiso">
+    <meta name="theme-color" content="#000000">
+    <meta name="color-scheme" content="light">
+
+    <link rel="canonical" href="https://portfolio-elko-lemiso.vercel.app/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Elko Lemiso">
+    <meta property="og:title" content="Elko Lemiso — AI Engineer &amp; Full-Stack Developer">
+    <meta
+      property="og:description"
+      content="AI engineer and full-stack developer building agent systems, security tooling, and production software."
+    >
+    <meta property="og:url" content="https://portfolio-elko-lemiso.vercel.app/">
+    <meta property="og:image" content="https://github.com/Elko-Lemiso.png">
+    <meta property="og:image:alt" content="Elko Lemiso">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Elko Lemiso — AI Engineer &amp; Full-Stack Developer">
+    <meta
+      name="twitter:description"
+      content="AI engineer and full-stack developer building agent systems, security tooling, and production software."
+    >
+    <meta name="twitter:image" content="https://github.com/Elko-Lemiso.png">
+    <meta name="twitter:image:alt" content="Elko Lemiso">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&amp;family=Instrument+Sans:wght@400;500;600;700&amp;display=swap"
+    >
+
     <style id="style-tag"></style>
-    <!-- Load vendor bundle first, then app bundle -->
-    <script src="dist/vendors.js"></script>
-    <script src="dist/app.js"></script>
+    <script src="dist/vendors.js" defer></script>
+    <script src="dist/app.js" defer></script>
+
     <link rel="icon" type="image/png" sizes="32x32" href="/ico/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/ico/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
-    <link rel="shortcut icon" href="/ico/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/ico/favicon.ico" type="image/x-icon">
   </head>
   <body spellcheck="false">
-    <!-- SVG Filter for Liquid Glass Effect -->
-    <svg style="position: absolute; width: 0; height: 0;">
-      <defs>
-        <filter id="glass-distortion">
-          <feTurbulence type="fractalNoise" baseFrequency="0.01 0.003" numOctaves="3" seed="2" />
-          <feDisplacementMap in="SourceGraphic" scale="20" />
-        </filter>
-      </defs>
-    </svg>
+    <a class="skip-link" href="#content">Skip to portfolio content</a>
 
-    <div id="content">
-      <pre id="style-text" contenteditable></pre>
-      <pre id="work-text"></pre>
-    </div>
-    <div id="header"></div>
-    <div id="html-injection-target"></div>
+    <header id="header"></header>
+
+    <main id="content" tabindex="-1" aria-label="Interactive portfolio">
+      <pre
+        id="style-text"
+        aria-label="CSS source window"
+        spellcheck="false"
+      ></pre>
+      <pre id="work-text" tabindex="0" aria-label="Portfolio content"></pre>
+    </main>
+
+    <section id="html-injection-target" aria-label="HTML preview output"></section>
   </body>
 </html>

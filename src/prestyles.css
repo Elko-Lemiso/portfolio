@@ -1,95 +1,129 @@
-/* Modern Glassmorphic Portfolio - Foundation Styles */
-
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-  font-family: 'JetBrains Mono', 'Courier New', monospace;
+:root {
+  color-scheme: light;
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --paper: #f2f2f2;
+  --gray-100: #e7e7e7;
+  --gray-300: #b8b8b8;
+  --gray-500: #6f6f6f;
+  --gray-700: #2e2e2e;
+  --rule: 1px solid var(--black);
+  --sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
 }
 
-/* Desktop background texture */
-body::before {
-  content: '';
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  margin: 0;
+  background: var(--paper);
+  scroll-behavior: auto;
+}
+
+body {
+  min-width: 320px;
+  height: 100dvh;
+  margin: 0;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--black);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+a {
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+::selection {
+  background: var(--black);
+  color: var(--white);
+}
+
+.skip-link {
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px),
-    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px);
-  opacity: 0.3;
-  pointer-events: none;
-  z-index: -1;
+  left: 1rem;
+  z-index: 10000;
+  padding: 0.75rem 1rem;
+  background: var(--black);
+  color: var(--white);
+  font: 500 0.75rem/1 var(--mono);
+  text-decoration: none;
+  text-transform: uppercase;
+  transform: translateY(-110%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+#content {
+  position: fixed;
+  inset: 12px 12px 76px;
 }
 
 pre {
-  overflow: auto;
-  max-height: 90%;
   width: 100%;
-  border-radius: 20px;
+  max-height: none;
+  margin: 0;
+  overflow: auto;
+  border-radius: 0;
+  scrollbar-color: var(--gray-500) transparent;
   scrollbar-width: thin;
-  scrollbar-color: rgba(168, 85, 247, 0.6) rgba(0, 0, 0, 0.2);
 }
 
-/* Modern Custom Scrollbars */
 pre::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 pre::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  margin: 4px;
+  background: transparent;
 }
 
 pre::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(168, 85, 247, 0.8), rgba(59, 130, 246, 0.8));
-  border-radius: 10px;
+  background: var(--gray-500);
   border: 2px solid transparent;
   background-clip: content-box;
 }
 
-pre::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(168, 85, 247, 1), rgba(59, 130, 246, 1));
-  background-clip: content-box;
-}
-
-#content {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 110px;
-}
-
-/* Dock - basic structure, will be styled during animation */
 #header {
   position: fixed;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 99999;
-  padding: 6px 12px;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  z-index: 2000;
+  height: 52px;
 }
 
 .dock {
   display: flex;
-  gap: 12px;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
 }
 
 .dock-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
-/* Hide all dock items except skip button initially */
+/* During the optional live intro, only the skip control is visible. */
 .dock-item:not(#skip-animation) {
   display: none !important;
 }
@@ -98,10 +132,23 @@ pre::-webkit-scrollbar-thumb:hover {
   display: none !important;
 }
 
-a:after {
-  content: none;
-}
+@media (max-width: 760px) {
+  body {
+    height: auto;
+    min-height: 100dvh;
+    overflow: auto;
+  }
 
-a:last-of-type:after {
-  border: none;
+  #content {
+    position: relative;
+    inset: auto;
+    min-height: 100dvh;
+    margin: 8px 8px 68px;
+  }
+
+  #header {
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+  }
 }

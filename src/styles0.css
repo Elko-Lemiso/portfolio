@@ -1,628 +1,365 @@
 /**
+ * Hello. I am Elko Lemiso.
  *
- * Hey. My name's Lemiso.
- *
- * I build apps, servers and  websites.
- *
- * How about some live coding?
-
- * (P.S You can skip this if you want, or try the JavaScript
- * and HTML editors in the dock below!)
-
- * Still with me ?
- * Awesome! Let's get started.
-
- */
-
-/**
- * Let's begin. We'll add smooth transitions to specific elements.
- * (Not everything - that would be slow!)
+ * I build production software, AI systems, and security tooling.
+ * This portfolio is a working interface, so the code stays visible.
  */
 
 pre,
 .window-button,
-.resize-handle,
 .dock-item {
-  -webkit-transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+  -webkit-transition: color 160ms ease, background-color 160ms ease,
+    border-color 160ms ease, opacity 160ms ease, transform 160ms ease;
+  transition: color 160ms ease, background-color 160ms ease,
+    border-color 160ms ease, opacity 160ms ease, transform 160ms ease;
 }
 
-/* Optimization for dragging - override the above */
 pre.is-dragging,
 pre.is-resizing {
   transition: none !important;
 }
 
 /**
- * That didn't do much. But you'll see.
- *
- * Black on white is really boring,
- * so let's do something about it.
+ * The system is deliberately strict: black, white, and useful grays.
+ * No glow, no glass, no decorative depth.
  */
 
-html {
-  background:
-    radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
-    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
-    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
-  background-color: #0f172a;
-  background-size: 100% 100%;
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
+html,
+body {
+  background: #f2f2f2;
 }
 
-body::before {
-  content: '';
-  position: fixed;
+pre:not(:empty) {
+  position: absolute;
   top: 0;
+  height: 100%;
+  overflow: auto;
+  border: 1px solid #0a0a0a;
+  border-radius: 0;
+  outline: 0;
+  box-shadow: none;
+  white-space: pre-wrap;
+}
+
+#work-text {
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background:
-    radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.15), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.15), transparent 25%);
-  filter: blur(40px);
-  z-index: -2;
-  animation: floatingGlow 15s ease-in-out infinite alternate;
+  z-index: 1;
+  width: calc(64% - 5px);
+  padding: 0;
+  background: #ffffff;
+  color: #0a0a0a;
 }
 
-@keyframes floatingGlow {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  100% {
-    transform: translate(20px, 20px);
-  }
+#style-text {
+  right: 0;
+  z-index: 2;
+  width: calc(36% - 5px);
+  padding: 0 20px 28px;
+  background: #0a0a0a;
+  color: #d7d7d7;
+  font: 400 11px/1.65 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  letter-spacing: -0.015em;
 }
 
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
+.style-editor-surface {
+  display: block;
+  min-height: calc(100% - 64px);
+  outline: 0;
+  caret-color: #ffffff;
+  white-space: pre-wrap;
 }
 
-/***
- * Hold on...
- */
-
-pre,
-a {
-  color: #f8fafc;
+.style-editor-surface:focus-visible {
+  box-shadow: inset 3px 0 0 #ffffff;
+  padding-left: 14px;
 }
 
 /**
- * That's better. Sorry about your eyes.
- *
- * Working in this big empty space is tough.
- *
- * I'm going to make a nice area for us to work in.
+ * Each panel has a plain, functional title rail.
  */
 
-pre:not(:empty) {
-  overflow: auto;
-  background: rgba(15, 23, 42, 0.85);
-  /* Slightly clearer dark blue/slate */
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 25px 50px -12px rgba(0, 0, 0, 0.5),
-    /* Deep shadow */
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-  /* Inner border glow */
-  /* max-height: 45vh;  <-- REMOVED: Allow full resizing */
-  width: 49%;
-  font-size: 14px;
-  font-family: 'JetBrains Mono', 'SF Mono', 'Monaco', monospace;
-  padding: 0;
-  padding-top: 40px;
-  white-space: pre-wrap;
-  outline: 0;
-  margin: 3vh 0.5vw;
-  border-radius: 12px;
-  line-height: 1.5;
-  letter-spacing: -0.04em;
-  /* Tighten character spacing */
-  word-spacing: -1px;
-  -webkit-font-smoothing: antialiased;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-  color: #e2e8f0;
-}
-
-/* Subtle texture overlay for retro tech feel */
-pre:not(:empty)::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  opacity: 0.5;
-  mix-blend-mode: overlay;
-  border-radius: 12px;
-}
-
-/* Sticky Header Container */
 .window-header-sticky {
   position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 42px;
   z-index: 100;
-  background: rgba(30, 41, 59, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px 12px 0 0;
+  width: 100%;
+  height: 44px;
   margin: 0;
-  margin-left: -2vw;
-  margin-right: -2vw;
-  margin-top: 0;
-  padding-left: 2vw;
-  padding-right: 2vw;
+  border-bottom: 1px solid #0a0a0a;
+  background: #ffffff;
+  color: #0a0a0a;
 }
 
-/* Title Bar Background */
-.window-titlebar-bg {
+#style-text .window-header-sticky,
+#js-window .window-header-sticky,
+#html-window .window-header-sticky,
+#jeffrey-window .window-header-sticky {
+  width: calc(100% + 40px);
+  margin: 0 -20px 20px;
+  border-bottom-color: #3a3a3a;
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+#work-text .window-header-sticky {
+  margin-bottom: 0;
+}
+
+.window-titlebar-bg,
+.window-titlebar-draggable {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 40px;
+  inset: 0;
+}
+
+.window-titlebar-bg {
   pointer-events: none;
 }
 
-/* Draggable title bar overlay */
 .window-titlebar-draggable {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 40px;
   z-index: 2;
   cursor: grab;
   user-select: none;
-  -webkit-user-select: none;
 }
 
 .window-titlebar-draggable:active {
   cursor: grabbing;
 }
 
-/* Window Title */
 .window-title {
   position: absolute;
-  top: 11px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  letter-spacing: 0;
-  pointer-events: none;
-  white-space: nowrap;
   z-index: 1;
+  overflow: hidden;
+  max-width: calc(100% - 160px);
+  color: inherit;
+  font: 500 10px/1 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  letter-spacing: 0.09em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
 }
 
-/* Traffic Light Buttons Container */
 .window-controls {
   position: absolute;
-  top: 14px;
-  left: 12px;
-  display: flex;
-  gap: 8px;
+  top: 50%;
+  left: 10px;
   z-index: 3;
+  display: flex;
+  gap: 5px;
   pointer-events: auto;
+  transform: translateY(-50%);
 }
 
 .window-button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+  position: relative;
+  display: grid;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
   cursor: pointer;
-  transition: transform 0.2s ease;
-  box-shadow:
-    0 0 2px rgba(0, 0, 0, 0.4),
-    0 1px 1px rgba(255, 255, 255, 0.3) inset;
 }
 
-.window-button:hover {
-  transform: scale(1.15);
+.window-button::after {
+  color: currentColor;
+  font: 400 12px/1 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
 }
 
-.window-button.close {
-  background: #FF5F57;
+.window-button.close::after {
+  content: '\00d7';
 }
 
-.window-button.close:hover::after {
-  content: '×';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.window-button.minimize::after {
+  content: '\2212';
+}
+
+.window-button.maximize::after {
+  content: '\25a1';
   font-size: 10px;
-  color: #8B0000;
-  font-weight: bold;
 }
 
-.window-button.minimize {
-  background: #FFBD2E;
+.window-button:hover,
+.window-button:focus-visible {
+  background: currentColor;
 }
 
-.window-button.minimize:hover::after {
-  content: '−';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 10px;
-  color: #8B4500;
-  font-weight: bold;
+#work-text .window-button:hover::after,
+#work-text .window-button:focus-visible::after {
+  color: #ffffff;
 }
 
-.window-button.maximize {
-  background: #28CA42;
+#style-text .window-button:hover::after,
+#style-text .window-button:focus-visible::after,
+#js-window .window-button:hover::after,
+#js-window .window-button:focus-visible::after,
+#html-window .window-button:hover::after,
+#html-window .window-button:focus-visible::after,
+#jeffrey-window .window-button:hover::after,
+#jeffrey-window .window-button:focus-visible::after {
+  color: #0a0a0a;
 }
 
-.window-button.maximize:hover::after {
-  content: '+';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 12px;
-  color: #006400;
-  font-weight: bold;
+.window-button:active {
+  transform: translateY(1px);
 }
 
-/* Resize Handles - Fixed to window borders, always accessible */
+.window-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/**
+ * Resize targets stay invisible until they are needed.
+ */
+
 .resize-handle {
-  position: fixed;
+  position: absolute;
   z-index: 13;
-  transition: background-color 0.2s ease;
 }
 
-.resize-handle:hover {
-  background-color: rgba(168, 85, 247, 0.3);
-}
-
-/* Corner handles - 10x10px clickable areas */
-.resize-handle-nw {
-  top: 0;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  border-top-left-radius: 10px;
-}
-
-.resize-handle-ne {
-  top: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  border-top-right-radius: 10px;
-}
-
-.resize-handle-se {
-  bottom: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  border-bottom-right-radius: 10px;
-}
-
+.resize-handle-nw,
+.resize-handle-ne,
+.resize-handle-se,
 .resize-handle-sw {
-  bottom: 0;
-  left: 0;
   width: 10px;
   height: 10px;
-  border-bottom-left-radius: 10px;
 }
 
-/* Edge handles - 5px wide, full length */
-.resize-handle-n {
-  top: 0;
-  left: 10px;
-  right: 10px;
-  height: 5px;
-}
+.resize-handle-nw { top: 0; left: 0; }
+.resize-handle-ne { top: 0; right: 0; }
+.resize-handle-se { right: 0; bottom: 0; }
+.resize-handle-sw { bottom: 0; left: 0; }
 
+.resize-handle-n,
 .resize-handle-s {
-  bottom: 0;
-  left: 10px;
   right: 10px;
+  left: 10px;
   height: 5px;
 }
 
-.resize-handle-e {
-  top: 10px;
-  right: 0;
-  bottom: 10px;
-  width: 5px;
-}
+.resize-handle-n { top: 0; }
+.resize-handle-s { bottom: 0; }
 
+.resize-handle-e,
 .resize-handle-w {
   top: 10px;
-  left: 0;
   bottom: 10px;
   width: 5px;
 }
 
-/* Hide resize handle when minimized or maximized */
+.resize-handle-e { right: 0; }
+.resize-handle-w { left: 0; }
+
 pre.minimized .resize-handle,
 pre.maximized .resize-handle {
   display: none;
 }
 
-/* Content padding - account for sticky header */
-pre:not(:empty) {
-  padding: 12px 2vw 2vh 2vw;
-  padding-top: 0;
-}
-
 /**
- * Okay. We're going to start filling up the screen.
- * Let's get ready to do some work.
- */
-
-#style-text {
-  -webkit-transform: translateX(0);
-  transform: translateX(0);
-  position: absolute;
-}
-
-/**
- * This is good, but all the text is white!
- * Let's make it even more readable.
+ * Monochrome syntax highlighting keeps the terminal legible.
  */
 
 .comment {
-  color: #fbbf24;
+  color: #8f8f8f;
   font-style: italic;
-  opacity: 0.9;
 }
 
 .selector {
-  color: #06b6d4;
-  font-weight: 600;
-  text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+  color: #ffffff;
+  font-weight: 500;
 }
 
+.key,
 .selector .key {
-  color: #a78bfa;
+  color: #c9c9c9;
 }
 
-.key {
-  color: #a78bfa;
-  font-weight: 500;
-}
-
-.value {
-  color: #f472b6;
-  font-weight: 500;
-}
-
+.value,
 .value.px {
-  color: #22d3ee;
-  font-weight: 600;
-  text-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+  color: #8f8f8f;
 }
-
-/**
- * Now we're getting somewhere.
- * Let's keep it simple and flat - just like real macOS.
- */
-
-body {
-  -webkit-perspective: none;
-  perspective: none;
-}
-
-#style-text {
-  position: absolute;
-  right: 0.5vw;
-  /* max-height: 80vh; <-- REMOVED */
-  height: 80vh;
-  /* Initial height, but resizable */
-}
-
-/**
- * So, let's talk projects. That's why you're here, right?
- * I can't imagine you'd come just to see the pretty colors.
- */
-
-pre:not(#style-text) {
-  position: relative;
-  left: 0.5vw;
-}
-
-/**
- * Window states - minimized and maximized
- */
-
-/**
- * Window states - minimized and maximized
- * Styled via JS transitions now for smoothness
- */
 
 pre.minimized {
   pointer-events: none;
 }
 
 pre.maximized {
-  /* Styling handled by JS for animation */
-  border-radius: 8px !important;
-  /* Slightly tighter corner on full screen */
+  border-radius: 0 !important;
 }
 
 /**
- * Terminal tabs for multi-editor interface
+ * Optional editor windows use the same flat system.
  */
 
-#terminal-window {
-  position: relative;
+#js-window,
+#html-window,
+#jeffrey-window {
+  padding: 0 20px 24px;
+  background: #0a0a0a;
+  color: #ffffff;
+  font: 400 12px/1.65 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
 }
 
-#terminal-tabs {
-  position: absolute;
-  top: 12px;
-  left: 80px;
-  display: flex;
-  gap: 4px;
-  z-index: 20;
-  pointer-events: auto;
-}
-
-.terminal-tab {
-  padding: 3px 10px;
-  font-size: 10px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-  border: 1px solid transparent;
-  backdrop-filter: blur(10px);
-}
-
-.terminal-tab:hover {
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.terminal-tab.active {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.terminal-editor {
-  display: none;
-  min-height: 300px;
-  padding: 10px 0;
-  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
-  font-size: 13px;
-  line-height: 1.6;
-  color: #a0e9ff;
-  white-space: pre-wrap;
-  outline: none;
-}
-
-.terminal-editor.active {
-  display: block !important;
-}
-
-.terminal-editor:empty:before {
-  content: attr(placeholder);
-  color: rgba(255, 255, 255, 0.3);
-  pointer-events: none;
-  white-space: pre-wrap;
-}
-
-.terminal-content-wrapper {
-  position: relative;
-  width: 100%;
-}
-
+#js-console,
 #console-output {
-  position: relative;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-height: 150px;
-  overflow-y: auto;
-  background: rgba(0, 0, 0, 0.3);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 8px 12px;
-  margin-top: 10px;
-  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
-  font-size: 11px;
-  color: #a0a0a0;
-  display: none;
-  z-index: 10;
-  border-radius: 4px;
-}
-
-#console-output.active {
-  display: block;
-}
-
-.console-line {
-  margin: 2px 0;
-  word-wrap: break-word;
-}
-
-.console-line.log {
-  color: #a0a0a0;
-}
-
-.console-line.error {
-  color: #ff6b6b;
-}
-
-.console-line.warn {
-  color: #ffd93d;
-}
-
-.console-line.info {
-  color: #6bcfff;
+  border-top: 1px solid #3a3a3a !important;
+  border-radius: 0 !important;
+  background: #151515 !important;
+  color: #b8b8b8 !important;
+  font-family: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace !important;
 }
 
 #html-injection-target {
-  position: relative;
-  z-index: 1;
+  display: none;
 }
 
-/* Window titles */
-#js-window::after {
-  content: 'JavaScript — 3lko.com';
-  position: absolute;
-  top: 11px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 13px;
-  font-weight: 500;
-  pointer-events: none;
-  z-index: 11;
-}
-
-#html-window::after {
-  content: 'HTML — 3lko.com';
-  position: absolute;
-  top: 11px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 13px;
-  font-weight: 500;
-  pointer-events: none;
-  z-index: 11;
-}
-
-/* Editor windows need special padding handling */
 .editor-window {
-  padding: 0 !important;
-  padding-top: 40px !important;
+  padding-top: 0 !important;
+}
+
+.editor-surface {
+  display: block;
+  min-height: calc(100% - 80px);
+  padding: 4px 0 24px;
+  outline: 0;
+  color: #ffffff;
+  caret-color: #ffffff;
+  white-space: pre-wrap;
+}
+
+.editor-surface:focus-visible {
+  box-shadow: inset 3px 0 0 #ffffff;
+  padding-left: 14px;
+}
+
+#js-window .editor-surface {
+  min-height: calc(100% - 214px);
+}
+
+#html-window .editor-surface {
+  min-height: calc(58% - 44px);
+}
+
+#js-console {
+  min-height: 120px;
+  padding: 12px 0;
+  overflow-y: auto;
+  font-size: 11px;
+}
+
+.html-preview {
+  min-height: 34%;
+  padding: 16px;
+  overflow: auto;
+  border: 1px solid #ffffff;
+  background: #ffffff;
+  color: #0a0a0a;
+  font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
 }
