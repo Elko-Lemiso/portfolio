@@ -49,12 +49,7 @@ async function start() {
       workText,
       createWorkBox,
       showDock: showAllDockItems,
-      addControls: () => {
-        prepareStyleEditor();
-        WindowManager.makeWindow(styleEl, 'Terminal — Source');
-        WindowManager.makeWindow(workEl, 'Portfolio — Elko Lemiso');
-        scrollPanesToTop();
-      },
+      addControls: finishPrimaryWindowSetup,
       isDev: false
     });
   } catch (e) {
@@ -94,11 +89,14 @@ function surprisinglyShortAttentionSpan() {
 
   showAllDockItems();
 
-  setTimeout(() => {
-    WindowManager.makeWindow(styleEl, 'Terminal — Source');
-    WindowManager.makeWindow(workEl, 'Portfolio — Elko Lemiso');
-    scrollPanesToTop();
-  }, CONSTANTS.WINDOW_CONTROLS_DELAY);
+  setTimeout(finishPrimaryWindowSetup, CONSTANTS.WINDOW_CONTROLS_DELAY);
+}
+
+function finishPrimaryWindowSetup() {
+  prepareStyleEditor();
+  WindowManager.makeWindow(styleEl, 'Terminal | Source');
+  WindowManager.makeWindow(workEl, 'Portfolio | Elko Lemiso');
+  scrollPanesToTop();
 }
 
 // Show the top of the portfolio/terminal content after the intro settles,

@@ -168,19 +168,13 @@ pre.is-resizing {
     font-size: clamp(56px, 20vw, 88px);
   }
 
-  .md h2 {
-    grid-template-columns: 42px 1fr;
-  }
-
   .md h2:first-of-type + ul,
-  .md h2:nth-of-type(3) + ul,
   .md h2:nth-of-type(4) + ul,
   .md h2:nth-of-type(6) + ul {
     display: block;
   }
 
   .md h2:first-of-type + ul li,
-  .md h2:nth-of-type(3) + ul li,
   .md h2:nth-of-type(4) + ul li,
   .md h2:nth-of-type(6) + ul li {
     min-height: 0;
@@ -195,7 +189,6 @@ pre.is-resizing {
   }
 
   .md h2:first-of-type + ul li:last-child,
-  .md h2:nth-of-type(3) + ul li:last-child,
   .md h2:nth-of-type(4) + ul li:last-child,
   .md h2:nth-of-type(6) + ul li:last-child {
     border-bottom: 0;
