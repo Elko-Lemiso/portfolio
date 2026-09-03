@@ -348,7 +348,7 @@ export const WindowManager = {
     document.getElementById('content').appendChild(jeffreyWindow);
     // Add controls slightly delayed ensuring DOM presence
     setTimeout(() => {
-      this.makeWindow(jeffreyWindow, 'Jeffrey — Film loop');
+      this.makeWindow(jeffreyWindow, 'Jeffrey | Film loop');
       this.bringToFront(jeffreyWindow);
     }, 0);
   },
